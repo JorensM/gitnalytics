@@ -29,14 +29,24 @@ const convertCommitHistoryToGARowData = (commitHistory: Commit[], startDate: str
     return rows;
 }
 
-const generateReport = (gaRows: any[], ghRows: Commit[][], startDate: string) => {
+const generateReport = (gaRows: any[], ghRows: Commit[][], startDate: string, endDate: string) => {
     const startDateM = moment(startDate);
-    return gaRows.map((gaRow, index) => ({ga: gaRow, gh: ghRows[index], date: moment(startDateM).add(index, 'days').format('YYYY-MM-DD')}));
+    const endDateM = moment(endDate);
+    const days = Math.abs(endDateM.diff(startDateM, 'days'));
+
+    const report = [...Array(days + 1)].map((d, day) => ({
+        ga: gaRows.find(row => moment(row.dimensionValues[0].value).isSame(moment(startDateM).add(day, 'days'), 'date')) || { metricValues: [ { value: 0 } ]},
+        gh: ghRows[day],
+        date: moment(startDateM).add(day, 'days').format('YYYY-MM-DD')
+    }))
+    return report;
 }
 
 export async function GET(req: NextRequest) {
     const supabase = await createClient();
     
+    await generateAccessTokenGoogle();
+
     const user = await supabase.auth.getUser();
     
     const data = {
@@ -60,8 +70,6 @@ export async function GET(req: NextRequest) {
         throw new Error (await res.text())
     }
     const githubData = await res.json();
-
-    await generateAccessTokenGoogle();
 
     const gaRes = await fetch('https://analyticsdata.googleapis.com/v1beta/properties/323656472:runReport', {
         method: "POST",
@@ -98,7 +106,7 @@ export async function GET(req: NextRequest) {
 
     const commitHistoryRows = convertCommitHistoryToGARowData(githubData, data.dateFrom, data.dateTo);
 
-    const rows = generateReport(gaData.rows, commitHistoryRows, data.dateFrom);
+    const rows = generateReport(gaData.rows, commitHistoryRows, data.dateFrom, data.dateTo);
 
     return NextResponse.json(rows);
 }

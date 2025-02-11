@@ -1,9 +1,16 @@
 "use client"
-import { CategoryScale, Chart, LinearScale, LineController, LineElement, PointElement } from 'chart.js';
+import { CategoryScale, Chart, Legend, LinearScale, LineController, LineElement, PointElement, Tooltip } from 'chart.js';
 import moment from 'moment';
 import { FormEvent, useEffect, useRef, useState } from 'react';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { Commit } from '@/app/api/reports/github-ga/route';
 
-Chart.register(LineController, CategoryScale, LinearScale, PointElement, LineElement);
+Chart.register(LineController, CategoryScale, LinearScale, PointElement, 
+    LineElement, 
+    Tooltip, 
+    ChartDataLabels,
+    Legend
+);
 
 export default function ReportForm() {
 
@@ -33,6 +40,18 @@ export default function ReportForm() {
                     line: {
                         tension: 0.4
                     }
+                },
+                interaction: {
+                    intersect: true,
+                    mode: 'index'
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    },
+                    tooltip: {
+
+                    }
                 }
             },
             data: {
@@ -51,14 +70,33 @@ export default function ReportForm() {
                 {
                     label: 'Visits',
                     data: data.map(row => row.ga.metricValues[0]?.value),
-                    borderColor: 'red',
-                    pointBackgroundColor: 'firebrick'
+                    borderColor: 'blue',
+                    pointBackgroundColor: 'darkblue'
                 },
                 {
                     label: 'Commits',
                     data: data.map(row => row.gh?.length || 0),
                     borderColor: 'orange',
-                    pointBackgroundColor: 'darkorange'
+                    pointBackgroundColor: 'darkorange',
+                    datalabels: {
+                        color: '#ffffff',
+                        opacity: 0.5,
+                        backgroundColor: 'darkorange',
+                        padding: 8,
+                        display: (context) => {
+                            return (context.dataset.data[context.dataIndex] as number) > 0;
+                        },
+                        formatter: (value, context) => {
+                            const dataPoint: Commit[] = data![context.dataIndex].gh as unknown as Commit[];
+                            console.log(context.dataset.data);
+                            console.log(data);
+                            if(parseInt(value) > 0) {
+                                return (
+                                    dataPoint.map((commit: Commit) => commit.commit.message).join('\n')
+                                );
+                            }
+                        }
+                    }
                 }
             ]
         }
