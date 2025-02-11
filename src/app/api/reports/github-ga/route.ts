@@ -29,8 +29,9 @@ const convertCommitHistoryToGARowData = (commitHistory: Commit[], startDate: str
     return rows;
 }
 
-const generateReport = (gaRows: any[], ghRows: Commit[][]) => {
-    return gaRows.map((gaRow, index) => ({ga: gaRow, gh: ghRows[index]}));
+const generateReport = (gaRows: any[], ghRows: Commit[][], startDate: string) => {
+    const startDateM = moment(startDate);
+    return gaRows.map((gaRow, index) => ({ga: gaRow, gh: ghRows[index], date: moment(startDateM).add(index, 'days').format('YYYY-MM-DD')}));
 }
 
 export async function GET(req: NextRequest) {
@@ -42,8 +43,8 @@ export async function GET(req: NextRequest) {
         repo: req.nextUrl.searchParams.get('repo'),
         gitToken: user.data.user?.user_metadata.githubAccessToken,
         gaToken: user.data.user?.user_metadata.googleAccessToken,
-        dateFrom: req.nextUrl.searchParams.get('date_from') as string,
-        dateTo: req.nextUrl.searchParams.get('date_to') as string
+        dateFrom: req.nextUrl.searchParams.get('dateFrom') as string,
+        dateTo: req.nextUrl.searchParams.get('dateTo') as string
     }
 
     console.log('gaToken: ', data.gaToken);
@@ -73,8 +74,16 @@ export async function GET(req: NextRequest) {
                 "startDate": data.dateFrom, 
                 "endDate": data.dateTo
             }],
-            "dimensions": [{ "name": "country" }],
-            "metrics": [{ "name": "activeUsers" }]   
+            "dimensions": [{ "name": "date" }],
+            "metrics": [{ "name": "activeUsers" }],
+            "orderBys": [
+                {
+                    "dimension": {
+                        "dimensionName": "date"
+                    }
+                }
+            ],
+            "keepEmptyRows": true
         })
     })
 
@@ -85,9 +94,11 @@ export async function GET(req: NextRequest) {
 
     const gaData = await gaRes.json();
 
+    console.log(gaData);
+
     const commitHistoryRows = convertCommitHistoryToGARowData(githubData, data.dateFrom, data.dateTo);
 
-    const rows = generateReport(gaData.rows, commitHistoryRows);
+    const rows = generateReport(gaData.rows, commitHistoryRows, data.dateFrom);
 
     return NextResponse.json(rows);
 }
