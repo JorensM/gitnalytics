@@ -31,5 +31,5 @@ export default async function GoogleSignIn() {
         redirect(authUrl);
     }
     
-    return isSignedIn ? '✔️ Signed in to Google' : <button className="max-w-[240px]" onClick={handleLogin}>Sign In To Google</button>
+    return isSignedIn ? <span>✔️ Signed in to Google</span> : <button className="max-w-[240px]" onClick={handleLogin}>Sign In To Google</button>
 }
