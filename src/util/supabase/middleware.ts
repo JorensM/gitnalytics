@@ -40,6 +40,7 @@ export async function updateSession(request: NextRequest) {
 
   // console.log(user);
 
+
   if (
     !user &&
     !request.nextUrl.pathname.startsWith('/login') &&
@@ -48,10 +49,11 @@ export async function updateSession(request: NextRequest) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
     url.pathname = '/login'
-    return NextResponse.redirect(url)
-  } else if (request.nextUrl.pathname.startsWith('/login')) {
+    return NextResponse.redirect(url);
+  } else if (user && request.nextUrl.pathname === '/') {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
+    return NextResponse.redirect(url);
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.

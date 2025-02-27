@@ -29,7 +29,7 @@ export default function ReportForm( { properties }: ReportFormProps ) {
     const [data, setData] = useState<any[] | null>(null);
     const [fetchingData, setFetchingData] = useState<boolean>(false);
     const chartElementRef = useRef<HTMLCanvasElement>(null);
-    const [selectedProperty, setSelectedProperty] = useState<string>('');
+    const [selectedProperty, setSelectedProperty] = useState<string>(properties[0].name);
     const chartRef = useRef<Chart>(null);
 
     useEffect(() => {
@@ -169,6 +169,7 @@ export default function ReportForm( { properties }: ReportFormProps ) {
                 <GaPropertySelect 
                     properties={properties}
                     onChange={handlePropertyChange}
+                    defaultValue={properties[0].name}
                 />
                 <input name='repo' placeholder='GitHub repo name' />
                 <button className='w-fit'>Generate Report</button>

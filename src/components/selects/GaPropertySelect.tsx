@@ -3,14 +3,15 @@ import { GaProperties } from '../ReportForm';
 
 type GaPropertySelectProps = {
     properties: GaProperties
-    onChange: (propertyName: string) => void
+    onChange: (propertyName: string) => void,
+    defaultValue: string
 }
 
-export default function GaPropertySelect( { properties, onChange }: GaPropertySelectProps) {
+export default function GaPropertySelect( { properties, onChange, defaultValue }: GaPropertySelectProps) {
 
     // const properties = fetchProperties();
 
-    const [value, setValue] = useState<string>('');
+    const [value, setValue] = useState<string>(defaultValue);
 
     console.log('properties: ' + properties);
 

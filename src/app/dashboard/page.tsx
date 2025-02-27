@@ -1,6 +1,6 @@
 import GitHubSignIn from '@/components/buttons/GitHubSignIn';
 import GoogleSignIn from '@/components/buttons/GoogleSignIn';
-import ReportForm from '@/components/ReportForm';
+import ReportForm, { GaProperties } from '@/components/ReportForm';
 import { generateAccessTokenGoogle, isLoggedInToGitHub, isLoggedInToGoogle } from '@/util/auth';
 import { createClient } from '@/util/supabase/server';
 import moment from 'moment';
@@ -52,7 +52,17 @@ export default async function DashboardPage() {
         return properties;
     }
 
-    const properties = await fetchProperties();
+
+    let properties: GaProperties = [];
+
+    const googleSignedIn = await isLoggedInToGoogle();
+    
+    if(googleSignedIn) {
+        await generateAccessTokenGoogle();
+        properties = await fetchProperties();
+    }
+
+
 
     return (
         <div className='flex h-full'>
