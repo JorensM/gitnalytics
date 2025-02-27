@@ -13,13 +13,13 @@ export async function GET(req: NextRequest) {
     });
 
     if(res.status !== 200) {
-        console.log(res);
+        // console.log(res);
         throw new Error(await res.text());
     }
 
     const data = new URLSearchParams(await res.text());
 
-    console.log(data);
+    // console.log(data);
 
     const supabaseRes = await supabaseClient.auth.updateUser({
         data: {

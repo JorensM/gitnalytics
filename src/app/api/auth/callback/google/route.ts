@@ -16,13 +16,13 @@ export async function GET(req: NextRequest) {
     });
     const code = new URL(req.url).searchParams.get('code') as string;
 
-    console.log(code);
+    // console.log(code);
     // Now that we have the code, use that to acquire tokens.
     const r = await client.getToken(code);
     // Make sure to set the credentials on the OAuth2 client.
     client.setCredentials(r.tokens);
 
-    console.log(r.tokens);
+    // console.log(r.tokens);
 
     const res = await supabaseClient.auth.updateUser({
         data: {

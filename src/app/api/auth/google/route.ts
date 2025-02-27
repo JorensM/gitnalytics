@@ -9,14 +9,14 @@ export async function POST(req: NextRequest) {
         process.env.GOOGLE_CLIENT_SECRET
     )
 
-    console.log(req.headers.get('Authorization'));
+    // console.log(req.headers.get('Authorization'));
     const tokenId = req.headers.get('Authorization') as string;
     const ticket = await client.verifyIdToken({
         idToken: tokenId.slice(7),
         audience: process.env.GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
-    console.log(payload);
+    // console.log(payload);
     if (!payload || payload.aud != process.env.GOOGLE_CLIENT_ID)
         return new NextResponse("Unauthorised", { status: 401 });
     const { email, name } = payload;

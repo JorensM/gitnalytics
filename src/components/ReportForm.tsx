@@ -1,9 +1,11 @@
 "use client"
 import { CategoryScale, Chart, Legend, LinearScale, LineController, LineElement, PointElement, Tooltip } from 'chart.js';
 import moment from 'moment';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Commit } from '@/app/api/reports/github-ga/route';
+import Spinner from './Spinner';
+import GaPropertySelect from './selects/GaPropertySelect';
 
 Chart.register(LineController, CategoryScale, LinearScale, PointElement, 
     LineElement, 
@@ -12,10 +14,22 @@ Chart.register(LineController, CategoryScale, LinearScale, PointElement,
     Legend
 );
 
-export default function ReportForm() {
+export type GaProperties = {
+    name: string,
+    account: string,
+    displayName: string
+}[];
+
+type ReportFormProps = {
+    properties: GaProperties
+}
+
+export default function ReportForm( { properties }: ReportFormProps ) {
 
     const [data, setData] = useState<any[] | null>(null);
+    const [fetchingData, setFetchingData] = useState<boolean>(false);
     const chartElementRef = useRef<HTMLCanvasElement>(null);
+    const [selectedProperty, setSelectedProperty] = useState<string>('');
     const chartRef = useRef<Chart>(null);
 
     useEffect(() => {
@@ -62,8 +76,9 @@ export default function ReportForm() {
     }, [chartElementRef])
 
     useEffect(() => {
+        setFetchingData(false);
         if(!data) return;
-        console.log('updating')
+        // console.log('updating')
         chartRef.current!.config.data = {
             labels: data.map((row, index) => moment(row.date).format('D MMM')),
             datasets: [
@@ -88,8 +103,8 @@ export default function ReportForm() {
                         },
                         formatter: (value, context) => {
                             const dataPoint: Commit[] = data![context.dataIndex].gh as unknown as Commit[];
-                            console.log(context.dataset.data);
-                            console.log(data);
+                            // console.log(context.dataset.data);
+                            // console.log(data);
                             if(parseInt(value) > 0) {
                                 return (
                                     dataPoint.map((commit: Commit) => commit.commit.message).join('\n')
@@ -104,8 +119,9 @@ export default function ReportForm() {
         chartRef.current?.update();
     }, [data]);
 
-    async function getReportGitHubGoogleAnalytics(e: FormEvent<HTMLFormElement>) {
+    const getReportGitHubGoogleAnalytics = useCallback(async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setFetchingData(true);
         const formData = new FormData(e.currentTarget);
 
         const data = {
@@ -114,7 +130,9 @@ export default function ReportForm() {
             dateTo: formData.get('date_to') as string
         }
 
-        const res = await fetch(`/api/reports/github-ga?repo=${data.repo}&dateFrom=${data.dateFrom}&dateTo=${data.dateTo}`);
+        console.log('selected property: ', selectedProperty);
+
+        const res = await fetch(`/api/reports/github-ga?repo=${data.repo}&dateFrom=${data.dateFrom}&dateTo=${data.dateTo}&property=`+selectedProperty);
 
         if(res.status !== 200) {
             throw new Error(await res.text());
@@ -123,35 +141,49 @@ export default function ReportForm() {
         const report = await res.json();
 
         setData(report);
-        console.log(report);
+        // console.log(report);
         //console.log(githubData);
         // console.log(gaData);
-    }
+    }, [selectedProperty]);
 
     const currDate = moment();
 
     const currDateStr = currDate.format('yyyy-MM-DD');
     const prevMonthDateStr = moment(currDate).subtract(1, 'month').format('yyyy-MM-DD');
 
-    console.log(currDateStr);
+    const handlePropertyChange = (property: string) => {
+        console.log('property change: ', property);
+        setSelectedProperty(property);
+    }
+    
+    // console.log(currDateStr);
 
     return (
-        <div>
+        <div className='flex flex-col gap-2 w-full'>
             <form onSubmit={getReportGitHubGoogleAnalytics} className='flex flex-col gap-2 max-w-[400px]'>
                 <div className='flex gap-2'>
                     <input type='date' name='date_from' defaultValue={prevMonthDateStr}></input>
                     -
                     <input type='date' name='date_to' defaultValue={currDateStr}></input>
                 </div>
+                <GaPropertySelect 
+                    properties={properties}
+                    onChange={handlePropertyChange}
+                />
                 <input name='repo' placeholder='GitHub repo name' />
-                <button>Generate Report</button>
+                <button className='w-fit'>Generate Report</button>
             </form> 
-            <canvas
+            {fetchingData ? <Spinner/> : null}
+            <div
                 className={!data ? 'hidden' : ''}
-                ref={chartElementRef}
             >
-                
-            </canvas>
+                <canvas
+                    ref={chartElementRef}
+                >
+                    
+                </canvas>
+
+            </div>
         </div>
     )
 }

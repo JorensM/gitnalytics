@@ -3,12 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --background: #131313;
+  --background: theme("colors.neutral.900");
   --foreground: #efefef;
 }
 
 button, .button {
-  width: fit-content;
   border: 1px solid white;
   border-radius: 4px;
   padding-block: 8px;

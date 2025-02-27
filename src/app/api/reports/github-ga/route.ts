@@ -57,7 +57,9 @@ export async function GET(req: NextRequest) {
         dateTo: req.nextUrl.searchParams.get('dateTo') as string
     }
 
-    console.log('gaToken: ', data.gaToken);
+    const property = req.nextUrl.searchParams.get('property');
+
+    // console.log('gaToken: ', data.gaToken);
 
     const res = await fetch('https://api.github.com/repos/' + data.repo + '/commits?since=' + moment(data.dateFrom).toISOString() + '&until=' + moment(data.dateTo).toISOString(), {
         method: 'GET',
@@ -71,7 +73,7 @@ export async function GET(req: NextRequest) {
     }
     const githubData = await res.json();
 
-    const gaRes = await fetch('https://analyticsdata.googleapis.com/v1beta/properties/323656472:runReport', {
+    const gaRes = await fetch('https://analyticsdata.googleapis.com/v1beta/' + property + ':runReport', {
         method: "POST",
         headers: {
             'Content-Type': "application/json",
@@ -102,7 +104,7 @@ export async function GET(req: NextRequest) {
 
     const gaData = await gaRes.json();
 
-    console.log(gaData);
+    // console.log(gaData);
 
     const commitHistoryRows = convertCommitHistoryToGARowData(githubData, data.dateFrom, data.dateTo);
 

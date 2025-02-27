@@ -1,0 +1,35 @@
+import { ChangeEvent, useState } from 'react';
+import { GaProperties } from '../ReportForm';
+
+type GaPropertySelectProps = {
+    properties: GaProperties
+    onChange: (propertyName: string) => void
+}
+
+export default function GaPropertySelect( { properties, onChange }: GaPropertySelectProps) {
+
+    // const properties = fetchProperties();
+
+    const [value, setValue] = useState<string>('');
+
+    console.log('properties: ' + properties);
+
+    const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        setValue(e.currentTarget.value);
+        onChange(e.currentTarget.value);
+    }
+
+    return (
+        <select 
+            className='text-neutral-800 h-[32px] pl-2'
+            onChange={handleChange}
+            value={value}
+        >
+            {properties.map((property) => (
+                <option value={property.name}>
+                    {property.displayName}
+                </option>
+            ))}
+        </select>
+    )
+}

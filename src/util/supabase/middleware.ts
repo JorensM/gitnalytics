@@ -15,7 +15,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          console.log('setting cookies');
+          // console.log('setting cookies');
           cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
@@ -38,7 +38,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  console.log(user);
+  // console.log(user);
 
   if (
     !user &&
