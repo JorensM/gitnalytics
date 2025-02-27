@@ -3,9 +3,9 @@ import Image from "next/image";
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-const supabase = await createClient();
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
 
   async function login(formData: FormData) {
     "use server"
