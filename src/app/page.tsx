@@ -5,10 +5,10 @@ import { redirect } from 'next/navigation';
 
 
 export default async function Home() {
-  const supabase = await createClient();
 
   async function login(formData: FormData) {
     "use server"
+    const supabase = await createClient();
     const res = await supabase.auth.signInWithPassword({
       email: formData.get('email') as string,
       password: formData.get('password') as string
