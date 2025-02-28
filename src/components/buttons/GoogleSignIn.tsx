@@ -1,3 +1,4 @@
+import { APP_URL } from '@/constants/envVars';
 import useHydrated from '@/hooks/isHydrated';
 import { createClient } from '@/util/supabase/server';
 import { OAuth2Client } from 'google-auth-library';
@@ -17,7 +18,7 @@ export default async function GoogleSignIn() {
 
     const handleLogin = async () => {
         "use server"
-        const redirectUri = process.env.APP_URL + '/api/auth/callback/google';
+        const redirectUri = APP_URL + '/api/auth/callback/google';
         // console.log('redirect uri:' + redirectUri);
         const client = new OAuth2Client({
             clientId: process.env.GOOGLE_CLIENT_ID,

@@ -3,11 +3,12 @@ import { OAuth2Client } from 'google-auth-library';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/util/supabase/server';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
+import { APP_URL } from '@/constants/envVars';
 
 
 export async function GET(req: NextRequest) {
     const supabaseClient = await createClient();
-    const redirectUri = process.env.APP_URL + '/api/auth/callback/google';
+    const redirectUri = APP_URL + '/api/auth/callback/google';
 
     const client = new OAuth2Client({
         clientId: process.env.GOOGLE_CLIENT_ID,
