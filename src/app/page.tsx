@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
 
 
-export default async function Home(req: NextRequest) {
+export default async function Home() {
 
   redirect('/login');
 
