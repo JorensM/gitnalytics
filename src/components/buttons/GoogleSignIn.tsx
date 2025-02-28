@@ -13,6 +13,7 @@ export default async function GoogleSignIn() {
 
     const handleLogin = async () => {
         "use server"
+        let authUrl = null;
         try {
             const redirectUri = APP_URL + '/api/auth/callback/google';
             const client = new OAuth2Client({
@@ -20,14 +21,17 @@ export default async function GoogleSignIn() {
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
                 redirectUri: redirectUri
             });
-            const authUrl = client.generateAuthUrl({
+            authUrl = client.generateAuthUrl({
                 access_type: 'offline',
                 scope: 'https://www.googleapis.com/auth/analytics.readonly',
                 prompt: 'consent'
             });
-            redirect(authUrl);
         } catch (error) {
             console.error('Login error:', error);
+        } finally {
+            if(authUrl) {
+                redirect(authUrl);
+            }
         }
     };
 
