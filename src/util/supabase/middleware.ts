@@ -46,8 +46,8 @@ export async function updateSession(request: NextRequest) {
   const hashParams = new URLSearchParams(request.nextUrl.hash);
 
   if(hashParams.get('type') === 'recovery') {
-    if(!user && request.nextUrl.pathname !== '/') {
-      return NextResponse.redirect('/?' + hashParams.toString());
+    if(!user && request.nextUrl.pathname !== '/login') {
+      return NextResponse.redirect('/login?' + hashParams.toString());
     } else if (request.nextUrl.pathname !== '/register') {
       return NextResponse.redirect('/resgister?' + hashParams.toString());
     }
@@ -62,7 +62,7 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url);
-  } else if (user && request.nextUrl.pathname === '/') {
+  } else if (user && request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/') {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
     return NextResponse.redirect(url);
