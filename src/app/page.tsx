@@ -1,34 +1,18 @@
 import { createClient } from '@/util/supabase/server';
+import { revalidatePath } from 'next/cache';
 import Image from "next/image";
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { NextRequest } from 'next/server';
 
 
-export default async function Home() {
+export default async function Home(req: NextRequest) {
 
-  async function login(formData: FormData) {
-    "use server"
-    const supabase = await createClient();
-    const res = await supabase.auth.signInWithPassword({
-      email: formData.get('email') as string,
-      password: formData.get('password') as string
-    })
-
-    if(res.error) {
-      throw res.error;
-    }
-
-    redirect('/dashboard')
-  }
+  redirect('/login');
 
   return (
-    <div className='h-full flex flex-col gap-8 items-center justify-center'>
-      <form action={login} className='flex flex-col gap-2'>
-        <h2>Login</h2>
-        <input placeholder='Email' name='email' />
-        <input type='password' placeholder='Password' name='password' />
-        <button>Login</button>
-      </form>
+    <div>
+      Hi :)
     </div>
   );
 }
