@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import Stripe from 'stripe';
 
-export default async function RegisterPage() {
+export default async function Home() {
     
     async function register(formData: FormData) {
         "use server";
@@ -30,14 +30,10 @@ export default async function RegisterPage() {
 
     return (
         <div className='h-full flex flex-col gap-8 items-center justify-center'>
-            <form action={register} className='flex flex-col gap-2 max-w-[240px]'>
-                <h2>Register</h2>
-                <input type='email' placeholder='Email' name='email' required/>
+            <form action={register} className='flex flex-col gap-2'>
+                <h2>Please set a password</h2>
                 <input type='password' placeholder='Password' name='password' minLength={5} maxLength={32} required/>
-                <p className='w-full text-sm'>
-                    After clicking 'Register', you will be taken to a Stripe Checkout page, and your 14 day trial will start.
-                </p>
-                <button>Register</button>
+                <button>Save password</button>
             </form>
 
         {/* <Link href='/register'>Login</Link> */}
