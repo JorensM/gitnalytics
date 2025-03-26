@@ -36,6 +36,7 @@ export default async function RegisterPage() {
                 <input type='password' placeholder='Password' name='password' minLength={5} maxLength={32} required/>
                 <p className='w-full text-sm'>
                     After clicking 'Register', you will be taken to a Stripe Checkout page, and your 14 day trial will start.
+                    (8 euros/month after trial ends)
                 </p>
                 <button>Register</button>
             </form>
