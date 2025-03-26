@@ -2,6 +2,7 @@ import { APP_URL } from '@/constants/envVars';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
+//https://docs.stripe.com/billing/quickstart
 
 export async function GET(request: NextRequest) {
     const data = await request.json();
