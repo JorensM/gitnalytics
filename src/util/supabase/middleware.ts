@@ -39,7 +39,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // console.log(user);
+  console.log(user);
 
   console.log(request.nextUrl);
   console.log('hash: ', request.nextUrl.hash);
@@ -62,7 +62,7 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url);
-  } else if (user && request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/') {
+  } else if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/')) {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
     return NextResponse.redirect(url);
