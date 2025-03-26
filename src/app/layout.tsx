@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SignOutButton from '@/components/buttons/SignOutButton';
 import { createClient } from '@/util/supabase/server';
+import AuthButtons from '@/components/layout/header/AuthButtons';
+import DashboardLink from '@/components/layout/header/DashboardLink';
+import Link from 'next/link';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,9 +42,14 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen`}
       >
-        <header className='flex p-5 border-b border-neutral-800 items-center leading-none justify-between'>
-          <h1>Gitnalytics</h1>
-          {loggedIn ? <SignOutButton /> : null}
+        <header className='flex h-[100px] px-5 border-b border-neutral-800 items-center leading-none justify-between'>
+          <h1 className='text-xl'><Link href='/'>Gitnalytics</Link></h1>
+          <div className='w-fit flex gap-4 items-center'>
+            {loggedIn ? <SignOutButton /> : null}
+            {!loggedIn ? 
+              <AuthButtons/>
+            : <DashboardLink/>}
+          </div>
         </header>
         <main className='flex flex-col flex-grow'>
 

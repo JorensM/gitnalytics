@@ -8,7 +8,7 @@ import { NextRequest } from 'next/server';
 
 export default async function Home() {
 
-  redirect('/login');
+  // redirect('/login');
 
   return (
     <div>
