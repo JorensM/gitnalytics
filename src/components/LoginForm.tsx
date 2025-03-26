@@ -34,6 +34,7 @@ export default function Login() {
     }
 
     navigate.refresh();
+    revalidatePath('/login', 'layout');
     navigate.push('/dashboard');
   }
 

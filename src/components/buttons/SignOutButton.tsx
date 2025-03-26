@@ -2,7 +2,8 @@
 
 import useSupabase from '@/hooks/useSupabase';
 import { createClient } from '@/util/supabase/client'
-import { useRouter } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function SignOutButton() {
@@ -10,6 +11,7 @@ export default function SignOutButton() {
     const supabase = useSupabase();
 
     const router = useRouter();
+    const pathname = usePathname();
 
     const onClick = () => {  
         (async () => {
@@ -19,6 +21,8 @@ export default function SignOutButton() {
                 throw res.error;
             }
     
+            router.refresh();
+            revalidatePath(pathname, 'layout');
             router.push('/login');
 
         })(); 
