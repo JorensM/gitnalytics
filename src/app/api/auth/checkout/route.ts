@@ -37,6 +37,9 @@ export async function GET(request: NextRequest) {
         email: params.email,
         password: params.password
       },
+      subscription_data: {
+        trial_period_days: 14
+      },
       mode: 'subscription',
       success_url: `${process.env.APP_URL}/after-checkout?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.APP_URL}/checkout?canceled=true`,
