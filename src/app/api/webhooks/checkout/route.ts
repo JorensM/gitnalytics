@@ -1,13 +1,14 @@
 import { APP_URL } from '@/constants/envVars';
 import { createClient } from '@/util/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
+import Stripe from 'stripe';
 
 // This webhook is called upon successful checkout of a 
 // new user. It should create an account for the new user
 // with the credentials based on the provided metadata in the request
 // body
 export async function POST(request: NextRequest) {
-    console.log('webhook called');
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
     const data = await request.json();
 
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient();
 
-    const { data: _data, error } = await supabase.auth.signUp({
+    const { data: { user } , error } = await supabase.auth.signUp({
         email: metadata.email,
         password: metadata.password,
         options: {
@@ -37,6 +38,16 @@ export async function POST(request: NextRequest) {
     if(error) {
         throw new Error('Error creating an account: ' + error.message);
     }
+
+    if(!user) {
+        throw new Error('User not')
+    }
+
+    await stripe.customers.update(customer, {
+        metadata: {
+            gitnalytics_user_id: user.id
+        }
+    })
 
     return new NextResponse();
 }
