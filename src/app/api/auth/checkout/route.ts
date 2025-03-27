@@ -4,8 +4,21 @@ import Stripe from 'stripe';
 
 //https://docs.stripe.com/billing/quickstart
 
-export async function GET(request: NextRequest, params: { lookup_key: string }) {
+export async function GET(request: NextRequest) {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+    const searchParams = request.nextUrl.searchParams;
+
+    const params = {
+      lookup_key: searchParams.get('lookup_key')!,
+      email: searchParams.get('email')!,
+      password: searchParams.get('password')!
+    };
+
+    console.log(request.nextUrl);
+    console.log(params);
+
+    console.log('params: ', params);
     const prices = await stripe.prices.list({
       lookup_keys: [params.lookup_key],
       expand: ['data.product'],
@@ -20,8 +33,12 @@ export async function GET(request: NextRequest, params: { lookup_key: string }) 
   
         },
       ],
+      metadata: {
+        email: params.email,
+        password: params.password
+      },
       mode: 'subscription',
-      success_url: `${process.env.APP_URL}/checkout?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.APP_URL}/after-checkout?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.APP_URL}/checkout?canceled=true`,
     });
 

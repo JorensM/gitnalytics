@@ -8,7 +8,11 @@ export default async function RegisterPage() {
     
     async function register(formData: FormData) {
         "use server";
-        redirect('/api/auth/checkout?lookup_key=' + process.env.STRIPE_SUBSCRIPTION_LOOKUP_KEY);
+
+        const password = formData.get('password');
+        const email = formData.get('email');
+
+        redirect('/api/auth/checkout?lookup_key=' + process.env.STRIPE_SUBSCRIPTION_LOOKUP_KEY + '&password=' + password + '&email=' + email);
         // const supabase = await createClient();
         // const data = {
         //     password: formData.get('password') as string
