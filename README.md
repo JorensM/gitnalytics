@@ -19,3 +19,23 @@ After deploy:
 
 Later:
  * Payment/Subscriptions
+
+Env vars:
+
+SUPABASE_URL
+SUPABASE_API_KEY
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+GITHUB_CLIENT_ID
+GITHUB_CLIENT_SECRET
+APP_URL
+STRIPE_PUBLISHABLE_KEY
+STRIPE_SECRET_KEY
+STRIPE_SUBSCRIPTION_LOOKUP_KEY
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+Stripe config:
+
+Need to create a product for subscription,
+need to configure customer portal at https://dashboard.stripe.com/test/settings/billing/portal
