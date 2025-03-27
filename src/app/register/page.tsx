@@ -8,24 +8,25 @@ export default async function RegisterPage() {
     
     async function register(formData: FormData) {
         "use server";
-        const supabase = await createClient();
-        const data = {
-            password: formData.get('password') as string
-        }
+        redirect('/api/auth/checkout?lookup_key=' + process.env.STRIPE_SUBSCRIPTION_LOOKUP_KEY);
+        // const supabase = await createClient();
+        // const data = {
+        //     password: formData.get('password') as string
+        // }
 
-        if(!data.password || data.password.length < 5){
-            throw new Error('Password not valid');
-        }
+        // if(!data.password || data.password.length < 5){
+        //     throw new Error('Password not valid');
+        // }
 
-        const res = await supabase.auth.updateUser({
-            password: data.password
-        })
+        // const res = await supabase.auth.updateUser({
+        //     password: data.password
+        // })
 
-        if(res.error) {
-            throw res.error
-        }
+        // if(res.error) {
+        //     throw res.error
+        // }
 
-        redirect('/login');
+        // redirect('/login');
     }
 
     return (

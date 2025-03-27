@@ -4,11 +4,10 @@ import Stripe from 'stripe';
 
 //https://docs.stripe.com/billing/quickstart
 
-export async function GET(request: NextRequest) {
-    const data = await request.json();
-    const stripe = new Stripe(process.env.STRIPE_PUBLISHABLE_KEY!);
+export async function GET(request: NextRequest, params: { lookup_key: string }) {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     const prices = await stripe.prices.list({
-      lookup_keys: [data.lookup_key],
+      lookup_keys: [params.lookup_key],
       expand: ['data.product'],
     });
     const session = await stripe.checkout.sessions.create({
