@@ -2,6 +2,8 @@ import GitHubSignIn from '@/components/buttons/GitHubSignIn';
 import GoogleSignIn from '@/components/buttons/GoogleSignIn';
 import ReportForm, { GaProperties } from '@/components/ReportForm';
 import { generateAccessTokenGoogle, isLoggedInToGitHub, isLoggedInToGoogle } from '@/util/auth';
+import createStripeClient from '@/util/createStripeClient';
+import { getSubscriptionActive } from '@/util/stripe';
 import { createClient } from '@/util/supabase/server';
 import moment from 'moment';
 import Link from 'next/link';
@@ -63,18 +65,25 @@ export default async function DashboardPage() {
         properties = await fetchProperties();
     }
 
-
+    const isSubscriptionActive = await getSubscriptionActive();
 
     return (
         <div className='border border-neutral-600 p-4 bg-neutral-900 rounded-sm flex flex-col gap-4'>
-            <h2>Generate Report</h2>
-            {!showReportForm ? 
-                <span className='text-sm text-neutral-400'>Please sign in to GitHub and Google to generate report</span>
+            {isSubscriptionActive ? 
+                <>
+                    <h2>Generate Report</h2>
+                    {!showReportForm ? 
+                        <span className='text-sm text-neutral-400'>Please sign in to GitHub and Google to generate report</span>
+                    : 
+                        <ReportForm 
+                            properties={properties}
+                        />
+                    }
+                </>
             : 
-                <ReportForm 
-                    properties={properties}
-                />
+                'Your subscription has ended. Please renew in settings to continue using Gitnalytics'
             }
+            
         </div>
     );
 }

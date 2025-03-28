@@ -40,14 +40,18 @@ export async function POST(request: NextRequest) {
     }
 
     if(!user) {
-        throw new Error('User not')
+        throw new Error('User not found')
     }
 
-    await stripe.customers.update(customer, {
+    const stripeRes = await stripe.customers.update(customer, {
         metadata: {
             gitnalytics_user_id: user.id
         }
     })
+
+    if(stripeRes.lastResponse.statusCode !== 200) {
+        throw new Error('Could not update Stripe customer');
+    }
 
     return new NextResponse();
 }
