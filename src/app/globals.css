@@ -27,3 +27,9 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer components {
+  .button-secondary-outline {
+    @apply border border-blue-800 p-2 text-blue-500 hover:bg-blue-800 hover:text-blue-200 rounded-sm;
+  }
+}

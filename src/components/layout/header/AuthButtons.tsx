@@ -21,7 +21,7 @@ export default function AuthButtons() {
                     </Link>
                 : null}
                 {showRegisterButton ? 
-                    <Link href='/register' className='border border-blue-800 p-2 text-blue-500 hover:bg-blue-800 hover:text-blue-200 rounded-sm'>
+                    <Link href='/register' className='button-secondary-outline'>
                         Register
                     </Link>
                 : null}
