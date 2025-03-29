@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./style.css";
 import SignOutButton from '@/components/buttons/SignOutButton';
 import { createClient } from '@/util/supabase/server';
 import AuthButtons from '@/components/layout/header/AuthButtons';
