@@ -3,7 +3,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/util/supabase/client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import useSupabase from '@/hooks/useSupabase';
 import { revalidatePath } from 'next/cache';
 
@@ -18,8 +18,19 @@ export default function Login() {
 
   const justSubscribed = params.get('subscribed') === 'true';
   const emailConfirmed = params.get('email_confirmed') === 'true';
+  const passwordChanged = params.get('password_changed') === 'true';
 
   const [error, setError] = useState<string | null>(null);
+
+  const message = useMemo(() => (
+    justSubscribed ? 
+      'Subscription successful, please confirm your email'
+    : emailConfirmed ? 
+      'Email confirmed, you may now log in'
+    : passwordChanged ?
+      'Password changed, please re-login'
+    : null
+  ), []);
 
   async function login(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,11 +58,7 @@ export default function Login() {
     <div className='h-full flex flex-col gap-8 items-center justify-center'>
       <form onSubmit={login} className='flex flex-col gap-2'>
         <h2>Login</h2>
-        {justSubscribed ? 
-          'Subscription successful, please confirm your email'
-        : emailConfirmed ? 
-          'Email confirmed, you may now log in'
-        : null}
+        {message}
         <input placeholder='Email' name='email' />
         <input type='password' placeholder='Password' name='password' />
         <span className='text-red-500'>{error}</span>

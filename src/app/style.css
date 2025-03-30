@@ -32,4 +32,8 @@ body {
   .button-secondary-outline {
     @apply border border-blue-800 p-2 text-blue-500 hover:bg-blue-800 hover:text-blue-200 rounded-sm;
   }
+
+  .form-error {
+    @apply text-sm text-red-400;
+  }
 }

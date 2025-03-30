@@ -5,7 +5,7 @@ export default function SettingsPage() {
     return (
         <div className='flex flex-col gap-4'>
             <ManageSubscriptionButton/>
-            <Link href='/register'>Change Password</Link>
+            <Link href='/dashboard/settings/change-password'>Change Password</Link>
         </div>
     )
 }
