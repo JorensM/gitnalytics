@@ -22,6 +22,10 @@ export async function POST(request: NextRequest) {
 
     const { metadata, customer } = data.data.object;
 
+    if(metadata.existing_customer) {
+        return new NextResponse();
+    }
+
     const supabase = await createClient();
 
     const { data: { user } , error } = await supabase.auth.signUp({

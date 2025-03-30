@@ -52,7 +52,6 @@ export default async function RootLayout({
           </div>
         </header>
         <main className='flex flex-col flex-grow'>
-
           {children}
         </main>
       </body>

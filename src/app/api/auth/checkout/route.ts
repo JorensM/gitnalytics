@@ -12,7 +12,8 @@ export async function GET(request: NextRequest) {
     const params = {
       lookup_key: searchParams.get('lookup_key')!,
       email: searchParams.get('email')!,
-      password: searchParams.get('password')!
+      password: searchParams.get('password')!,
+      customer: searchParams.get('customer')
     };
 
     console.log(request.nextUrl);
@@ -23,6 +24,16 @@ export async function GET(request: NextRequest) {
       lookup_keys: [params.lookup_key],
       expand: ['data.product'],
     });
+
+    const metadata = params.customer ? {
+      existing_customer: 'true',
+      email: null,
+      password: null
+    } : {
+      existing_customer: null,
+      email: params.email,
+      password: params.password
+    };
     const session = await stripe.checkout.sessions.create({
       billing_address_collection: 'auto',
       line_items: [
@@ -33,15 +44,13 @@ export async function GET(request: NextRequest) {
   
         },
       ],
-      metadata: {
-        email: params.email,
-        password: params.password
-      },
+      metadata,
       subscription_data: {
-        trial_period_days: 14
+        trial_period_days: params.customer ? undefined : 14
       },
+      customer: params.customer || undefined,
       mode: 'subscription',
-      success_url: `${process.env.APP_URL}/after-checkout?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.APP_URL}/after-checkout?success=true&session_id={CHECKOUT_SESSION_ID}&renewed=${!!params.customer}`,
       cancel_url: `${process.env.APP_URL}/checkout?canceled=true`,
     });
 

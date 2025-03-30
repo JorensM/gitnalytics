@@ -12,7 +12,7 @@ export default async function DashboardLayout(props: LayoutProps) {
 
     return (
         <div className='flex h-full'>
-            <div className='flex gap-4 flex-col p-4 border-r border-neutral-800 h-full max-w-[290px]'>
+            <div className='flex gap-4 flex-col p-4 border-r border-neutral-800 h-full min-w-[220px] max-w-[400px]'>
                 <h1><Link href='/dashboard'>Dashboard</Link></h1>
                 <div className='flex flex-col gap-2 h-full'>
                     {isSubscriptionActive ? 
