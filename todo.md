@@ -1,4 +1,4 @@
-* Repo selection instead of name input - more intuitive to let the user select the repo from a dropdown
+* Include organization repos in repo dropdown
 * Measurement selection - display statistics for selected measurement (new users, active users, events)
 * When user is unsubscribed but still have paid days left, show a warning with
 how many days they have left until losing access
@@ -10,6 +10,7 @@ Unplanned:
 
 Done:
 
+* Repo selection instead of name input - more intuitive to let the user select the repo from a dropdown
 * Renew subscription feature
 * Change password feature
 * Add register link to login page
