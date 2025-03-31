@@ -32,6 +32,10 @@ a {
   @apply hover:underline;
 }
 
+select {
+  @apply text-neutral-800 h-[32px] pl-2;
+}
+
 @layer components {
   .button-secondary-outline {
     @apply border border-blue-800 p-2 text-blue-500 hover:bg-blue-800 hover:text-blue-200 rounded-sm;
