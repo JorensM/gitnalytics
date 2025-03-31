@@ -6,6 +6,8 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Commit } from '@/app/api/reports/github-ga/route';
 import Spinner from './Spinner';
 import GaPropertySelect from './selects/GaPropertySelect';
+import { createClient } from '@/util/supabase/client';
+import GitHubRepositorySelect, { GitHubRepository } from './selects/GitHubRepositorySelect';
 
 Chart.register(LineController, CategoryScale, LinearScale, PointElement, 
     LineElement, 
@@ -21,10 +23,11 @@ export type GaProperties = {
 }[];
 
 type ReportFormProps = {
-    properties: GaProperties
+    properties: GaProperties,
+    repositories: GitHubRepository[]
 }
 
-export default function ReportForm( { properties }: ReportFormProps ) {
+export default function ReportForm( { properties, repositories }: ReportFormProps ) {
 
     const [data, setData] = useState<any[] | null>(null);
     const [fetchingData, setFetchingData] = useState<boolean>(false);
@@ -171,7 +174,10 @@ export default function ReportForm( { properties }: ReportFormProps ) {
                     onChange={handlePropertyChange}
                     defaultValue={properties[0].name}
                 />
-                <input name='repo' placeholder='GitHub repo name' />
+                <GitHubRepositorySelect
+                    repositories={repositories}
+                    name='repo'
+                />
                 <button className='w-fit'>Generate Report</button>
             </form> 
             {fetchingData ? <Spinner/> : null}

@@ -1,6 +1,7 @@
 import GitHubSignIn from '@/components/buttons/GitHubSignIn';
 import GoogleSignIn from '@/components/buttons/GoogleSignIn';
 import ReportForm, { GaProperties } from '@/components/ReportForm';
+import { GitHubRepository } from '@/components/selects/GitHubRepositorySelect';
 import { generateAccessTokenGoogle, isLoggedInToGitHub, isLoggedInToGoogle } from '@/util/auth';
 import createStripeClient from '@/util/createStripeClient';
 import { getSubscriptionActive } from '@/util/stripe';
@@ -55,14 +56,42 @@ export default async function DashboardPage() {
         return properties;
     }
 
+    const fetchGithubRepositories = async () => {
+            const supabase = await createClient();
+            const { data: { user }, error } = await supabase.auth.getUser();
+    
+            if(error) {
+                throw error;
+            }
+    
+            const githubAccessToken = user?.user_metadata.githubAccessToken;
+    
+            const res = await fetch('https://api.github.com/user/repos', {
+                headers: {
+                    'Accept': 'application/vnd.github+json',
+                    'Authorization': 'Bearer ' + githubAccessToken,
+                }
+            })
+    
+            const data = await res.json();
+
+            return data;
+    }
+
 
     let properties: GaProperties = [];
+    let repositories: GitHubRepository[] = [];
 
     const googleSignedIn = await isLoggedInToGoogle();
+    const githubSignedIn = await isLoggedInToGitHub();
     
     if(googleSignedIn) {
         await generateAccessTokenGoogle();
         properties = await fetchProperties();
+    }
+
+    if(githubSignedIn) {
+        repositories = await fetchGithubRepositories();
     }
 
     const isSubscriptionActive = await getSubscriptionActive();
@@ -77,6 +106,7 @@ export default async function DashboardPage() {
                     : 
                         <ReportForm 
                             properties={properties}
+                            repositories={repositories}
                         />
                     }
                 </>

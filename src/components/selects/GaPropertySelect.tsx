@@ -22,7 +22,6 @@ export default function GaPropertySelect( { properties, onChange, defaultValue }
 
     return (
         <select 
-            className='text-neutral-800 h-[32px] pl-2'
             onChange={handleChange}
             value={value}
         >
