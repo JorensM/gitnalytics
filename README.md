@@ -34,6 +34,7 @@ STRIPE_SECRET_KEY
 STRIPE_SUBSCRIPTION_LOOKUP_KEY
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
+OFFLINE_MODE=true/false - used for development when there is no internet access
 
 Stripe config:
 

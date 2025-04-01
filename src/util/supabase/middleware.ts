@@ -3,6 +3,12 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
 
+  if(process.env.OFFLINE_MODE === 'true') {
+    return NextResponse.next({
+      request
+    })
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   })
