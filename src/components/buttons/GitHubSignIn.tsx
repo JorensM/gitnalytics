@@ -4,14 +4,14 @@ import GitHubClient from '@/util/clients/git/GitHubClient';
 export default async function GitHubSignIn() {
 
     const isLoggedIn = await isLoggedInToGitHub();
-    const github = new GitHubClient();
-
+    
     const handleLogout = async () => {
         "use server";
+        const github = new GitHubClient();
         await github.revokeAccess();
     }
 
-
+    const github = new GitHubClient();
     const authURL = github.authRedirectURL();
 
     return (
