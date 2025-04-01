@@ -1,22 +1,20 @@
 import { isLoggedInToGitHub } from '@/util/auth';
+import GitHubClient from '@/util/clients/git/GitHubClient';
 import { createClient } from '@/util/supabase/server'
 import { redirect } from 'next/navigation';
 
 export default async function GitHubSignIn() {
 
     const isLoggedIn = await isLoggedInToGitHub();
+    const github = new GitHubClient();
 
     const handleLogout = async () => {
         "use server";
-        const supabase = await createClient()
-        await supabase.auth.updateUser({
-            data: {
-                githubAccessToken: null
-            }
-        })
-
-        redirect('https://github.com/settings/connections/applications/' + process.env.GITHUB_CLIENT_ID);
+        await github.revokeAccess();
     }
+
+
+    const authURL = github.authRedirectURL();
 
     return (
         isLoggedIn ? 
@@ -25,7 +23,7 @@ export default async function GitHubSignIn() {
             <button className='border-none h-fit w-fit text-sm text-neutral-500' onClick={handleLogout}>Sign out</button>
         </div>  :
         <a 
-            href={"https://github.com/login/oauth/authorize?scope=user:email%20read:org&client_id=" + process.env.GITHUB_CLIENT_ID}
+            href={authURL}
             className='button w-full'
         >
             Sign in to GitHub
