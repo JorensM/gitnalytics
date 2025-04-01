@@ -1,4 +1,3 @@
-* Bug: When the commit descriptions overflow the chart <canvas/> element, the parts that overflow are hidden
 * When user is unsubscribed but still have paid days left, show a warning with
 how many days they have left until losing access
 * Subscription renews on _date_ (in settings)
@@ -10,6 +9,7 @@ Unplanned:
 
 Done:
 
+* Bug: When the commit descriptions overflow the chart <canvas/> element, the parts that overflow are hidden
 * Metric selection - display statistics for selected metric (new users, active users, events)
 * Landing page
 * Include organization repos in repo dropdown

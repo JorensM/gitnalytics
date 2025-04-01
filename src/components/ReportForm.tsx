@@ -40,6 +40,11 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
     const [selectedMetric, setSelectedMetric] = useState<string>('activeUsers');
     const chartRef = useRef<Chart>(null);
 
+    const getDataPoint = useCallback((index: number) => {
+        console.log('getting data point from data: ', data);
+        data?.[index]
+    }, [data]);
+
     useEffect(() => {
         if(!chartElementRef) return;
         if(chartRef.current) chartRef.current.destroy();
@@ -67,13 +72,13 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
                     intersect: true,
                     mode: 'index'
                 },
+                layout: {
+                    padding: 50
+                },
                 plugins: {
                     legend: {
                         display: true
                     },
-                    tooltip: {
-
-                    }
                 }
             },
             data: {
@@ -100,28 +105,25 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
                     label: 'Commits',
                     data: data.map(row => row.gh?.length || 0),
                     borderColor: 'orange',
-                    pointBackgroundColor: 'darkorange',
-                    datalabels: {
-                        color: '#ffffff',
-                        opacity: 0.5,
-                        backgroundColor: 'darkorange',
-                        padding: 8,
-                        display: (context) => {
-                            return (context.dataset.data[context.dataIndex] as number) > 0;
-                        },
-                        formatter: (value, context) => {
-                            const dataPoint: Commit[] = data![context.dataIndex].gh as unknown as Commit[];
-                            // console.log(context.dataset.data);
-                            // console.log(data);
-                            if(parseInt(value) > 0) {
-                                return (
-                                    dataPoint.map((commit: Commit) => commit.commit.message).join('\n')
-                                );
-                            }
-                        }
-                    }
+                    pointBackgroundColor: 'darkorange'
                 }
-            ]
+            ],
+        }
+        chartRef.current!.options.plugins!.tooltip!.callbacks = {
+            afterBody: (items) => {
+                const context = items[1];
+                if((context.raw as number) > 0) {
+                    console.log('index: ', context.dataIndex);
+                    const dataPoint: Commit[] = data[context.dataIndex]?.gh as unknown as Commit[];
+                    console.log('datapoint: ', dataPoint);
+                    if(!dataPoint) {
+                        return;
+                    }
+                    return (
+                        dataPoint.map((commit: Commit) => commit.commit.message).join('\n')
+                    );
+                }
+            }
         }
 
         chartRef.current?.update();
