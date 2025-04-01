@@ -11,7 +11,21 @@ import Link from 'next/link';
 
 
 
+function parseRelHeader(data: string) {
+    let arrData = data.split("link:")
+    data = arrData.length == 2? arrData[1]: data;
+    let parsed_data: { [key: string]: string } = {}
 
+    arrData = data.split(",")
+
+    for (const d of arrData){
+        const linkInfo = /<([^>]+)>;\s+rel="([^"]+)"/ig.exec(d)!;
+
+        parsed_data[linkInfo[2]]=linkInfo[1]
+    }
+
+    return parsed_data;
+}
 
 export default async function DashboardPage() {
 
@@ -66,16 +80,33 @@ export default async function DashboardPage() {
     
             const githubAccessToken = user?.user_metadata.githubAccessToken;
     
-            const res = await fetch('https://api.github.com/user/repos', {
-                headers: {
-                    'Accept': 'application/vnd.github+json',
-                    'Authorization': 'Bearer ' + githubAccessToken,
-                }
-            })
-    
-            const data = await res.json();
+            let nextPageLink = null;
+            let repos: GitHubRepository[] = [];
 
-            return data;
+            do {
+                const res: Response = await fetch(nextPageLink || 'https://api.github.com/user/repos?type=all', {
+                    headers: {
+                        'Accept': 'application/vnd.github+json',
+                        'Authorization': 'Bearer ' + githubAccessToken,
+                    }
+                });
+
+                const linkHeaderRaw = res.headers.get('link');
+
+                const linkHeaderParsed = linkHeaderRaw ? parseRelHeader(linkHeaderRaw) : null;
+
+                console.log(linkHeaderParsed);
+
+                nextPageLink = linkHeaderParsed?.next;
+
+                const data = await res.json();
+
+                console.log('fetched repositories: ', data);
+
+                repos = [...repos, ...data];
+            } while (nextPageLink);
+
+            return repos;
     }
 
 

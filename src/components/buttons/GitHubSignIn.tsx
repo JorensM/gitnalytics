@@ -25,7 +25,7 @@ export default async function GitHubSignIn() {
             <button className='border-none h-fit w-fit text-sm text-neutral-500' onClick={handleLogout}>Sign out</button>
         </div>  :
         <a 
-            href={"https://github.com/login/oauth/authorize?scope=user:email&client_id=" + process.env.GITHUB_CLIENT_ID}
+            href={"https://github.com/login/oauth/authorize?scope=user:email%20read:org&client_id=" + process.env.GITHUB_CLIENT_ID}
             className='button w-full'
         >
             Sign in to GitHub
