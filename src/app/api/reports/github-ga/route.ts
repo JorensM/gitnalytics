@@ -54,7 +54,8 @@ export async function GET(req: NextRequest) {
         gitToken: user.data.user?.user_metadata.githubAccessToken,
         gaToken: user.data.user?.user_metadata.googleAccessToken,
         dateFrom: req.nextUrl.searchParams.get('dateFrom') as string,
-        dateTo: req.nextUrl.searchParams.get('dateTo') as string
+        dateTo: req.nextUrl.searchParams.get('dateTo') as string,
+        metric: req.nextUrl.searchParams.get('metric') as string
     }
 
     const property = req.nextUrl.searchParams.get('property');
@@ -85,7 +86,7 @@ export async function GET(req: NextRequest) {
                 "endDate": data.dateTo
             }],
             "dimensions": [{ "name": "date" }],
-            "metrics": [{ "name": "activeUsers" }],
+            "metrics": [{ "name": data.metric }],
             "orderBys": [
                 {
                     "dimension": {

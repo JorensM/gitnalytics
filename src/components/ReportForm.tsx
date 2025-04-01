@@ -8,6 +8,8 @@ import Spinner from './Spinner';
 import GaPropertySelect from './selects/GaPropertySelect';
 import { createClient } from '@/util/supabase/client';
 import GitHubRepositorySelect, { GitHubRepository } from './selects/GitHubRepositorySelect';
+import GaMetricSelect from './selects/GaMetricSelect';
+import { GA_METRICS } from '@/constants/googleAnalytics';
 
 Chart.register(LineController, CategoryScale, LinearScale, PointElement, 
     LineElement, 
@@ -27,12 +29,15 @@ type ReportFormProps = {
     repositories: GitHubRepository[]
 }
 
+const getGAMetricLabel = (metric: string) => GA_METRICS.find(_metric => _metric.value === metric)?.label;
+
 export default function ReportForm( { properties, repositories }: ReportFormProps ) {
 
     const [data, setData] = useState<any[] | null>(null);
     const [fetchingData, setFetchingData] = useState<boolean>(false);
     const chartElementRef = useRef<HTMLCanvasElement>(null);
     const [selectedProperty, setSelectedProperty] = useState<string>(properties[0].name);
+    const [selectedMetric, setSelectedMetric] = useState<string>('activeUsers');
     const chartRef = useRef<Chart>(null);
 
     useEffect(() => {
@@ -86,7 +91,7 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
             labels: data.map((row, index) => moment(row.date).format('D MMM')),
             datasets: [
                 {
-                    label: 'Visits',
+                    label: getGAMetricLabel(selectedMetric),
                     data: data.map(row => row.ga.metricValues[0]?.value),
                     borderColor: 'blue',
                     pointBackgroundColor: 'darkblue'
@@ -135,7 +140,7 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
 
         console.log('selected property: ', selectedProperty);
 
-        const res = await fetch(`/api/reports/github-ga?repo=${data.repo}&dateFrom=${data.dateFrom}&dateTo=${data.dateTo}&property=`+selectedProperty);
+        const res = await fetch(`/api/reports/github-ga?repo=${data.repo}&dateFrom=${data.dateFrom}&dateTo=${data.dateTo}&property=${selectedProperty}&metric=${selectedMetric}`);
 
         if(res.status !== 200) {
             throw new Error(await res.text());
@@ -147,7 +152,7 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
         // console.log(report);
         //console.log(githubData);
         // console.log(gaData);
-    }, [selectedProperty]);
+    }, [selectedProperty, selectedMetric]);
 
     const currDate = moment();
 
@@ -157,6 +162,10 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
     const handlePropertyChange = (property: string) => {
         console.log('property change: ', property);
         setSelectedProperty(property);
+    }
+
+    const handleMetricChange = (metric: string) => {
+        setSelectedMetric(metric);
     }
     
     // console.log(currDateStr);
@@ -177,6 +186,10 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
                 <GitHubRepositorySelect
                     repositories={repositories}
                     name='repo'
+                />
+                <GaMetricSelect
+                    onChange={handleMetricChange}
+                    defaultValue={selectedMetric}
                 />
                 <button className='w-fit'>Generate Report</button>
             </form> 
