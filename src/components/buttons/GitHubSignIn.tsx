@@ -1,7 +1,5 @@
 import { isLoggedInToGitHub } from '@/util/auth';
 import GitHubClient from '@/util/clients/git/GitHubClient';
-import { createClient } from '@/util/supabase/server'
-import { redirect } from 'next/navigation';
 
 export default async function GitHubSignIn() {
 
