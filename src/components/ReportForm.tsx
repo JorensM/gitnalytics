@@ -29,7 +29,7 @@ type ReportFormProps = {
     repositories: GitHubRepository[]
 }
 
-const getGAMetricLabel = (metric: string) => GA_METRICS.find(_metric => _metric.value === metric)?.label;
+const getGAMetricLabel = (metric: string): string => GA_METRICS.find(_metric => _metric.value === metric)!.label;
 
 export default function ReportForm( { properties, repositories }: ReportFormProps ) {
 
