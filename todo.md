@@ -1,4 +1,5 @@
 * Include organization repos in repo dropdown
+* Landing page
 * Measurement selection - display statistics for selected measurement (new users, active users, events)
 * Bug: When the commit descriptions overflow the chart <canvas/> element, the parts that overflow are hidden
 * When user is unsubscribed but still have paid days left, show a warning with
