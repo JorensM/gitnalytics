@@ -38,6 +38,7 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <meta name="google-signin-client_id" content="961657177961-62qmq2ojrg0quor18spps69iktv2pvp9.apps.googleusercontent.com" />
+        <meta name="google-site-verification" content="RqhEfADoIZofqXSGw9vHoh2AIaq45u-2iHEdhhV8ns8" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen`}
