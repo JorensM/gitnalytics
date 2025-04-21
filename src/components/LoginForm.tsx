@@ -34,6 +34,7 @@ export default function Login() {
 
   async function login(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
     if(!supabase.current) {
         throw new Error('Supabase not initialized');
     }
@@ -46,7 +47,7 @@ export default function Login() {
 
     if(res.error) {
       setError(res.error.message)
-      throw res.error;
+      //throw res.error;
     }
 
     navigate.refresh();

@@ -26,3 +26,19 @@ export const getSubscriptionActive = async () => {
         return subscriptions.some(subscription => !subscription.ended_at)
     }
 }
+
+export async function getSubscriptionStatusMessage(_isActive?: boolean) {
+    const stripe = createStripeClient();
+
+    const stripeCustomerID = await getStripeCustomerID();
+
+    const { data: subscriptions } = await stripe.subscriptions.list({
+        customer: stripeCustomerID
+    })
+    const isActive = typeof _isActive === 'undefined' ? await getSubscriptionActive() : _isActive;
+    if(isActive) {
+        return 'Subscription active';
+    } else {
+        
+    }
+}
