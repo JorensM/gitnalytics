@@ -1,4 +1,4 @@
-* Allow user to sign out of GitHub without needing to go to their GH settings page
+
 
 Unplanned:
 
@@ -6,6 +6,7 @@ Unplanned:
 
 Done:
 
+* Allow user to sign out of GitHub without needing to go to their GH settings page
 * Subscription renews on _date_ (in settings)
 * When user is unsubscribed but still have paid days left, show a warning with
 how many days they have left until losing access
