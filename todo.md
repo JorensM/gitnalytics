@@ -1,4 +1,3 @@
-* Subscription renews on _date_ (in settings)
 * Allow user to sign out of GitHub without needing to go to their GH settings page
 
 Unplanned:
@@ -7,6 +6,7 @@ Unplanned:
 
 Done:
 
+* Subscription renews on _date_ (in settings)
 * When user is unsubscribed but still have paid days left, show a warning with
 how many days they have left until losing access
 * Bug: When the commit descriptions overflow the chart <canvas/> element, the parts that overflow are hidden
