@@ -1,15 +1,17 @@
-import { getStripeCustomerID, getSubscriptionActive } from '@/util/stripe'
+import { getStripeCustomerID, getSubscriptionActive, getSubscriptionStatus, getSubscriptionStatusMessage } from '@/util/stripe'
+import clsx from 'clsx';
 import Link from 'next/link';
 
 export default async function RenewSubscriptionButton() {
 
     const isSubscriptionActive = await getSubscriptionActive();
     const stripeCustomerID = await getStripeCustomerID();
+    const subscriptionStatus = await getSubscriptionStatus();
 
-    if(isSubscriptionActive) {
+    if(subscriptionStatus.isActive) {
         return (
-            <span className='text-sm text-green-500'>
-                Subscription active
+            <span className={clsx('text-sm', subscriptionStatus.isCancelled ? 'text-orange-500' : 'text-green-500')}>
+                {await getSubscriptionStatusMessage()}
             </span>
         )
     }

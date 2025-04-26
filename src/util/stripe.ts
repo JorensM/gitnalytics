@@ -1,3 +1,4 @@
+import moment from 'moment';
 import createStripeClient from './createStripeClient';
 import { createClient } from './supabase/server';
 
@@ -27,7 +28,7 @@ export const getSubscriptionActive = async () => {
     }
 }
 
-export async function getSubscriptionStatusMessage(_isActive?: boolean) {
+export const getSubscriptionCancelled = async () => {
     const stripe = createStripeClient();
 
     const stripeCustomerID = await getStripeCustomerID();
@@ -35,10 +36,55 @@ export async function getSubscriptionStatusMessage(_isActive?: boolean) {
     const { data: subscriptions } = await stripe.subscriptions.list({
         customer: stripeCustomerID
     })
-    const isActive = typeof _isActive === 'undefined' ? await getSubscriptionActive() : _isActive;
+
+    if(subscriptions.length === 0) {
+        return false;
+    } else {
+        return subscriptions.every(subscription => subscription.canceled_at)
+    }
+}
+
+export async function getSubscriptionStatus() {
+    const stripe = createStripeClient();
+
+    const stripeCustomerID = await getStripeCustomerID();
+
+    const isActive = await getSubscriptionActive();
+    const isCancelled = await getSubscriptionCancelled();
+    const trial = null;
+    let daysLeft;
+
+
+    if(isCancelled) {
+        const { data: subscriptions } = await stripe.subscriptions.list({
+            customer: stripeCustomerID
+        })
+        const subscription = subscriptions[0];
+        daysLeft = moment.unix(subscription.cancel_at!).diff(moment(), 'days');
+    }
+
+    return {
+        isActive,
+        isCancelled,
+        daysLeft
+    }
+}
+
+export async function getSubscriptionStatusMessage(_isActive?: boolean) {
+    const stripe = createStripeClient();
+
+    const stripeCustomerID = await getStripeCustomerID();
+
+    const isActive = typeof _isActive === 'undefined' ? !(await getSubscriptionCancelled()) : _isActive;
+
     if(isActive) {
         return 'Subscription active';
     } else {
-        
+        const { data: subscriptions } = await stripe.subscriptions.list({
+            customer: stripeCustomerID
+        })
+        const subscription = subscriptions[0];
+        const daysLeft = moment.unix(subscription.cancel_at!).diff(moment(), 'days');
+        return daysLeft + ' days until subscription ends';
     }
 }

@@ -6,6 +6,8 @@ import { createClient } from '@/util/supabase/server';
 import AuthButtons from '@/components/layout/header/AuthButtons';
 import DashboardLink from '@/components/layout/header/DashboardLink';
 import Link from 'next/link';
+import { getSubscriptionStatus, getSubscriptionStatusMessage } from '@/util/stripe';
+import clsx from 'clsx';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +36,8 @@ export default async function RootLayout({
 
   const loggedIn = !!user;
 
+  const subscriptionStatus = await getSubscriptionStatus();
+
   return (
     <html lang="en">
       <head>
@@ -44,7 +48,12 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen`}
       >
         <header className='flex h-[100px] px-5 border-b border-neutral-800 items-center leading-none justify-between'>
-          <h1 className='text-xl'><Link href='/'>Gitnalytics</Link></h1>
+          <div>
+            <h1 className='text-xl'><Link href='/'>Gitnalytics</Link></h1>
+            {subscriptionStatus.isCancelled ?
+              <span className='text-sm text-orange-500'>{await getSubscriptionStatusMessage()}</span>
+            : null}
+          </div>
           <div className='w-fit flex gap-4 items-center'>
             {loggedIn ? <SignOutButton /> : null}
             {!loggedIn ? 
