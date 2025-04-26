@@ -10,9 +10,14 @@ export default async function RenewSubscriptionButton() {
 
     if(subscriptionStatus.isActive) {
         return (
-            <span className={clsx('text-sm', subscriptionStatus.isCancelled ? 'text-orange-500' : 'text-green-500')}>
-                {await getSubscriptionStatusMessage()}
-            </span>
+            <div className='flex flex-col'>
+                <span className={clsx('text-sm', subscriptionStatus.isCancelled ? 'text-orange-500' : 'text-green-500')}>
+                    {await getSubscriptionStatusMessage()}
+                </span>
+                <span className='text-neutral-500'>
+                    Next billing date on {subscriptionStatus.nextBillingDate}
+                </span>
+            </div>
         )
     }
     return (

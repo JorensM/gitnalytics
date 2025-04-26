@@ -54,19 +54,25 @@ export async function getSubscriptionStatus() {
     const trial = null;
     let daysLeft;
 
+    const { data: subscriptions } = await stripe.subscriptions.list({
+        customer: stripeCustomerID
+    })
+
+    console.log(subscriptions);
+
+    const subscription = subscriptions[0];
 
     if(isCancelled) {
-        const { data: subscriptions } = await stripe.subscriptions.list({
-            customer: stripeCustomerID
-        })
-        const subscription = subscriptions[0];
         daysLeft = moment.unix(subscription.cancel_at!).diff(moment(), 'days');
     }
+
+    const nextBillingDate = moment.unix(subscription.current_period_end).format('YYYY-MM-DD');
 
     return {
         isActive,
         isCancelled,
-        daysLeft
+        daysLeft,
+        nextBillingDate
     }
 }
 
