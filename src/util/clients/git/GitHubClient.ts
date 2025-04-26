@@ -33,12 +33,30 @@ export default class GitHubClient extends GitClient {
 
     async revokeAccess(): Promise<void> {
         const supabase = await createClient();
+        const { data: user } = await supabase.auth.getUser();
         // Clear access token from user metadata
-        await supabase.auth.updateUser({
-            data: {
-                githubAccessToken: null
-            }
-        })
-        redirect('https://github.com/settings/connections/applications/' + process.env.GITHUB_CLIENT_ID);
+
+        const authHeader = 'Basic ' + Buffer.from(process.env.GITHUB_CLIENT_ID + ':' + process.env.GITHUB_CLIENT_SECRET).toString('base64');
+        
+        console.log(authHeader);
+
+        const res = await fetch(`https://api.github.com/applications/${process.env.GITHUB_CLIENT_ID}/grant`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/vnd.github+json',
+                'Authorization': authHeader
+            },
+            body: JSON.stringify({
+                access_token: user.user?.user_metadata.githubAccessToken
+            }),
+        });
+        
+        if(res.status === 204) {
+            await supabase.auth.updateUser({
+                data: {
+                    githubAccessToken: null
+                }
+            })
+        }
     }
 }
