@@ -36,7 +36,7 @@ export default async function RootLayout({
 
   const loggedIn = !!user;
 
-  const subscriptionStatus = await getSubscriptionStatus();
+  const subscriptionStatus = loggedIn ? await getSubscriptionStatus() : undefined;
 
   return (
     <html lang="en">
@@ -61,7 +61,7 @@ export default async function RootLayout({
         <header className='flex h-[100px] px-5 border-b border-neutral-800 items-center leading-none justify-between'>
           <div>
             <h1 className='text-xl'><Link href='/'>Gitnalytics</Link></h1>
-            {subscriptionStatus.isCancelled ?
+            {subscriptionStatus?.isCancelled ?
               <span className='text-sm text-orange-500'>{await getSubscriptionStatusMessage()}</span>
             : null}
           </div>
