@@ -43,6 +43,15 @@ export default async function RootLayout({
       <head>
         <meta name="google-signin-client_id" content="961657177961-62qmq2ojrg0quor18spps69iktv2pvp9.apps.googleusercontent.com" />
         <meta name="google-site-verification" content="RqhEfADoIZofqXSGw9vHoh2AIaq45u-2iHEdhhV8ns8" />
+        {/* Google Tag (Google Analytics) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GXM4YEPGPR"></script>
+        <script>
+          {`window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-GXM4YEPGPR');`}
+        </script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen`}

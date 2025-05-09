@@ -1,5 +1,4 @@
 * Buy domain
-* Set up Google Analytics for Gitnalytics
 * Check prod integrations and verify that everything works correctly
 * Report does not include last date
 
@@ -10,6 +9,7 @@ Unplanned:
 
 Done:
 
+* Set up Google Analytics for Gitnalytics
 * Allow user to sign out of GitHub without needing to go to their GH settings page
 * Subscription renews on _date_ (in settings)
 * When user is unsubscribed but still have paid days left, show a warning with
