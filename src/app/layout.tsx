@@ -8,6 +8,7 @@ import DashboardLink from '@/components/layout/header/DashboardLink';
 import Link from 'next/link';
 import { getSubscriptionStatus, getSubscriptionStatusMessage } from '@/util/stripe';
 import clsx from 'clsx';
+import Script from 'next/script';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,13 +46,15 @@ export default async function RootLayout({
         <meta name="google-site-verification" content="RqhEfADoIZofqXSGw9vHoh2AIaq45u-2iHEdhhV8ns8" />
         {/* Google Tag (Google Analytics) */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-GXM4YEPGPR"></script>
-        <script>
+        <Script
+          id='g-tag'
+        >
           {`window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
 
           gtag('config', 'G-GXM4YEPGPR');`}
-        </script>
+        </Script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen`}
