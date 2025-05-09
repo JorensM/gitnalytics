@@ -52,7 +52,7 @@ export default async function RootLayout({
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', 'G-GXM4YEPGPR', { 'cookieFlags': 'SameSite=None; Secure' });`}
+          gtag('config', 'G-GXM4YEPGPR', { 'cookie_flags': 'SameSite=None; Secure' });`}
         </Script>
       </head>
       <body
