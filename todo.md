@@ -1,3 +1,4 @@
+* Buy domain
 * Set up Google Analytics for Gitnalytics
 * Check prod integrations and verify that everything works correctly
 * Report does not include last date
