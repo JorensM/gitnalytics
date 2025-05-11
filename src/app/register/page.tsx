@@ -44,10 +44,12 @@ export default async function RegisterPage() {
                     (8 euros/month after trial ends)
                 </p>
                 <button>Register</button>
+                <p className='text-sm'>
+                    If you'd like to get a demo of the tool without providing
+                    payment information, please reach out to me directly at&nbsp;
+                    <a className='text-blue-400' href='mailto:printystudios@gmail.com'>printystudios@gmail.com</a>
+                </p>
             </form>
-
-        {/* <Link href='/register'>Login</Link> */}
-
         </div>
     );
 }
