@@ -5,6 +5,7 @@ import Link from 'next/link';
 import createStripeClient from '@/util/createStripeClient';
 import { createClient } from '@/util/supabase/server';
 import { getSubscriptionActive } from '@/util/stripe';
+import MailLink from '@/components/buttons/MailLink';
 
 export default async function DashboardLayout(props: LayoutProps) {
 
@@ -21,8 +22,9 @@ export default async function DashboardLayout(props: LayoutProps) {
                         <GitHubSignIn />
                     </>    
                     : null}
-                    <div className='mt-auto'>
+                    <div className='flex flex-col mt-auto gap-4'>
                         <Link href='/dashboard/settings' className='text-neutral-400'>Settings</Link>
+                        <MailLink text='Contact' className='text-sm'/>
                     </div>
                 </div>
             </div>
