@@ -8,6 +8,7 @@ import DashboardLink from '@/components/layout/header/DashboardLink';
 import Link from 'next/link';
 import { getSubscriptionStatus, getSubscriptionStatusMessage } from '@/util/stripe';
 import Script from 'next/script';
+import MailLink from '@/components/buttons/MailLink';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,8 +76,13 @@ export default async function RootLayout({
         <main className='flex flex-col flex-grow'>
           {children}
         </main>
-        <footer>
-          Contact
+        <footer className='py-8 px-5 border-t border-t-neutral-700'>
+          <div>
+            <span className='text-lg'>Contact</span>
+            <ul>
+              <li><MailLink/></li>
+            </ul>
+          </div>
         </footer>
       </body>
     </html>
