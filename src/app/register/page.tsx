@@ -1,3 +1,4 @@
+import MailLink from '@/components/buttons/MailLink';
 import { createClient } from '@/util/supabase/server';
 import Image from "next/image";
 import Link from 'next/link';
@@ -47,7 +48,7 @@ export default async function RegisterPage() {
                 <p className='text-sm'>
                     If you'd like to get a demo of the tool without providing
                     payment information, please reach out to me directly at&nbsp;
-                    <a className='text-blue-400' href='mailto:printystudios@gmail.com'>printystudios@gmail.com</a>
+                    <MailLink />
                 </p>
             </form>
         </div>

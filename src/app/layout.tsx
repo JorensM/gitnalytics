@@ -56,9 +56,9 @@ export default async function RootLayout({
         </Script>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} flex flex-col h-screen`}
       >
-        <header className='flex h-[100px] px-5 border-b border-neutral-800 items-center leading-none justify-between'>
+        <header className='flex py-4 px-5 border-b border-neutral-800 items-center leading-none justify-between'>
           <div>
             <h1 className='text-xl'><Link href='/'>Gitnalytics</Link></h1>
             {subscriptionStatus?.isCancelled ?
@@ -75,6 +75,9 @@ export default async function RootLayout({
         <main className='flex flex-col flex-grow'>
           {children}
         </main>
+        <footer>
+          Contact
+        </footer>
       </body>
     </html>
   );
