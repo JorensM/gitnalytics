@@ -1,6 +1,7 @@
 
 * Check prod integrations and verify that everything works correctly
 * Report does not include last date
+* Add loading indicator for platform logout buttons
 * Brainstorm possible integrations (BitBucket, GitLab, Analytics Platforms)
 * Figure out an interface for communication between integrations
 
