@@ -1,6 +1,8 @@
 
 * Check prod integrations and verify that everything works correctly
 * Report does not include last date
+* Brainstorm possible integrations (BitBucket, GitLab, Analytics Platforms)
+* Figure out an interface for communication between integrations
 
 
 Unplanned:
