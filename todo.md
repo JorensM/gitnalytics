@@ -2,6 +2,9 @@
 * Check prod integrations and verify that everything works correctly
     * ~~Bug: Can not sign in to google because APP_URL env var points to wrong URL (might be fixed already)~~
     * Stripe production
+        * Webhooks
+        * Redirect to correct domain (after checkout)
+* Add required Stripe details to website https://support.stripe.com/questions/business-website-for-account-activation-faq
 * Report does not include last date
 * Add loading indicator for platform logout buttons
 * Brainstorm possible integrations (BitBucket, GitLab, Analytics Platforms)
