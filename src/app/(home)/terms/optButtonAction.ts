@@ -5,12 +5,14 @@ import { redirect } from 'next/navigation';
 export const handleOptButtonClick = async () => {
         'use server';
         const _cookies = await cookies();
-        const optedIn = _cookies.get('data-consent');
-        if(optedIn) {
+        const prevOptedIn = _cookies.get('data-consent')?.value === 'true';
+        if(prevOptedIn) {
+            console.log('opting out')
             _cookies.delete('data-consent');
         } else {
+            console.log('opting in');
             _cookies.set('data-consent', 'true');
         }
         revalidatePath('/terms', 'layout');
-        redirect('/terms?optedOut=' + !optedIn);
+        redirect('/terms?' + (prevOptedIn ? ('optedOut=true') : ''));
 }

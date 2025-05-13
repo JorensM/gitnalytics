@@ -1,8 +1,8 @@
-'use client';
-import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers'
-import { redirect, useSearchParams } from 'next/navigation';
-import { Router } from 'next/router';
+import { handleOptButtonClick } from './optButtonAction';
+import OptOutAlert from './OptOutAlert';
+
+
 
 export default async function TermsPage() {
 
@@ -10,16 +10,9 @@ export default async function TermsPage() {
 
     const optedIn = _cookies.get('data-consent')?.value === 'true';
 
-    const searchParams = useSearchParams();
-
-    const justOptedOut = searchParams.get('optedOut') === 'true';
-
-    if(justOptedOut) {
-        alert('Please refresh the page for opt-out to take action');
-    }
-
     return (
         <div className='p-8 max-w-[800px] flex flex-col gap-2'>
+            <OptOutAlert />
             <h2 className='text-xl font-bold'>Privacy Policy</h2>
             <h3 className='text-lg font-semibold'>User data</h3>
             <p>
