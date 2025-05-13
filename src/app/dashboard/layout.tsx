@@ -1,11 +1,11 @@
 import GoogleSignIn from '@/components/buttons/GoogleSignIn';
-import { LayoutProps } from '../../../.next/types/app/dashboard/layout';
 import GitHubSignIn from '@/components/buttons/GitHubSignIn';
 import Link from 'next/link';
 import createStripeClient from '@/util/createStripeClient';
 import { createClient } from '@/util/supabase/server';
 import { getSubscriptionActive } from '@/util/stripe';
 import MailLink from '@/components/buttons/MailLink';
+import { LayoutProps } from '../../../.next/types/app/layout';
 
 export default async function DashboardLayout(props: LayoutProps) {
 
