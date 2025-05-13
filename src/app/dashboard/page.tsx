@@ -66,7 +66,7 @@ export default async function DashboardPage() {
         }
 
 
-        console.log('properties: ', properties);
+        // console.log('properties: ', properties);
         return properties;
     }
 
@@ -95,13 +95,13 @@ export default async function DashboardPage() {
 
                 const linkHeaderParsed = linkHeaderRaw ? parseRelHeader(linkHeaderRaw) : null;
 
-                console.log(linkHeaderParsed);
+                // console.log(linkHeaderParsed);
 
                 nextPageLink = linkHeaderParsed?.next;
 
                 const data = await res.json();
 
-                console.log('fetched repositories: ', data);
+                // console.log('fetched repositories: ', data);
 
                 repos = [...repos, ...data];
             } while (nextPageLink);

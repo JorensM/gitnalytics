@@ -1,15 +1,15 @@
 
-* Check prod integrations and verify that everything works correctly
+* ~~Check prod integrations and verify that everything works correctly~~
     * ~~Bug: Can not sign in to google because APP_URL env var points to wrong URL (might be fixed already)~~
-    * Stripe production
-        * Webhooks
-        * Redirect to correct domain (after checkout)
+    * ~~Stripe production~~
+        * ~~Webhooks~~
+        * ~~Redirect to correct domain (after checkout)~~
 * Add required Stripe details to website https://support.stripe.com/questions/business-website-for-account-activation-faq
-* Report does not include last date
+* Left nav is wrong height after generating report
 * Add loading indicator for platform logout buttons
 * Brainstorm possible integrations (BitBucket, GitLab, Analytics Platforms)
 * Figure out an interface for communication between integrations
-
+* Hide "Next billing date on" when subscription has been cancelled
 
 Unplanned:
 
@@ -17,6 +17,7 @@ Unplanned:
 
 Done:
 
+* ~~Report does not include last date~~
 * ~~Add a 'Contact us' button~~
 * ~~Buy domain~~
 * ~~Set up Google Analytics for Gitnalytics~~

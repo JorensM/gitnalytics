@@ -38,7 +38,7 @@ export const getSubscriptionCancelled = async () => {
     })
 
     if(subscriptions.length === 0) {
-        return false;
+        return true;
     } else {
         return subscriptions.every(subscription => subscription.canceled_at)
     }
@@ -51,6 +51,7 @@ export async function getSubscriptionStatus() {
 
     const isActive = await getSubscriptionActive();
     const isCancelled = await getSubscriptionCancelled();
+    console.log('is cancelled: ', isCancelled);
     const trial = null;
     let daysLeft;
 
@@ -58,21 +59,29 @@ export async function getSubscriptionStatus() {
         customer: stripeCustomerID
     })
 
-    console.log(subscriptions);
+    if(!subscriptions.length) {
+        daysLeft = 0;
+    }
+
+    // console.log(subscriptions);
 
     const subscription = subscriptions[0];
 
-    if(isCancelled) {
+    let nextBillingDate;
+
+    if(isCancelled && subscriptions.length) {
         daysLeft = moment.unix(subscription.cancel_at!).diff(moment(), 'days');
+    } else if(subscriptions.length) {
+        nextBillingDate = moment.unix(subscription.current_period_end).format('YYYY-MM-DD');
     }
 
-    const nextBillingDate = moment.unix(subscription.current_period_end).format('YYYY-MM-DD');
 
     return {
         isActive,
         isCancelled,
         daysLeft,
-        nextBillingDate
+        nextBillingDate,
+        ended: isCancelled && !daysLeft
     }
 }
 
@@ -83,8 +92,12 @@ export async function getSubscriptionStatusMessage(_isActive?: boolean) {
 
     const isActive = typeof _isActive === 'undefined' ? !(await getSubscriptionCancelled()) : _isActive;
 
+    const subscriptionStatus = await getSubscriptionStatus();
+
     if(isActive) {
         return 'Subscription active';
+    } else if(subscriptionStatus.ended) {
+        return 'Subscription ended';
     } else {
         const { data: subscriptions } = await stripe.subscriptions.list({
             customer: stripeCustomerID

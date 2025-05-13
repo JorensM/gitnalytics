@@ -45,10 +45,10 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  console.log(user);
+  // console.log(user);
 
-  console.log(request.nextUrl);
-  console.log('hash: ', request.nextUrl.hash);
+  // console.log(request.nextUrl);
+  // console.log('hash: ', request.nextUrl.hash);
   const hashParams = new URLSearchParams(request.nextUrl.hash);
 
   if(hashParams.get('type') === 'recovery') {

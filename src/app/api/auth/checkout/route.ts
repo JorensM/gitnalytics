@@ -16,10 +16,10 @@ export async function GET(request: NextRequest) {
       customer: searchParams.get('customer')
     };
 
-    console.log(request.nextUrl);
-    console.log(params);
+    // console.log(request.nextUrl);
+    // console.log(params);
 
-    console.log('params: ', params);
+    // console.log('params: ', params);
     const prices = await stripe.prices.list({
       lookup_keys: [params.lookup_key],
       expand: ['data.product'],

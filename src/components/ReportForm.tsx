@@ -113,9 +113,9 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
             afterBody: (items) => {
                 const context = items[1];
                 if((context.raw as number) > 0) {
-                    console.log('index: ', context.dataIndex);
+                    // console.log('index: ', context.dataIndex);
                     const dataPoint: Commit[] = data[context.dataIndex]?.gh as unknown as Commit[];
-                    console.log('datapoint: ', dataPoint);
+                    // console.log('datapoint: ', dataPoint);
                     if(!dataPoint) {
                         return;
                     }
@@ -140,7 +140,7 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
             dateTo: formData.get('date_to') as string
         }
 
-        console.log('selected property: ', selectedProperty);
+        // console.log('selected property: ', selectedProperty);
 
         const res = await fetch(`/api/reports/github-ga?repo=${data.repo}&dateFrom=${data.dateFrom}&dateTo=${data.dateTo}&property=${selectedProperty}&metric=${selectedMetric}`);
 

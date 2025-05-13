@@ -13,7 +13,7 @@ export default function GaPropertySelect( { properties, onChange, defaultValue }
 
     const [value, setValue] = useState<string>(defaultValue);
 
-    console.log('properties: ' + properties);
+    // console.log('properties: ' + properties);
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setValue(e.currentTarget.value);

@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
         return new NextResponse();
     }
 
-    console.log('data: ', data);
+    // console.log('data: ', data);
 
     const { metadata, customer } = data.data.object;
 
