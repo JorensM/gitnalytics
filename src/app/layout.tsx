@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { getSubscriptionStatus, getSubscriptionStatusMessage } from '@/util/stripe';
 import Script from 'next/script';
 import MailLink from '@/components/buttons/MailLink';
+import { cookies } from 'next/headers';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,22 +40,30 @@ export default async function RootLayout({
 
   const subscriptionStatus = loggedIn ? await getSubscriptionStatus() : undefined;
 
+  const dataConsent = (await cookies()).get('data-consent')?.value === 'true';
+
   return (
     <html lang="en">
       <head>
         <meta name="google-signin-client_id" content="961657177961-62qmq2ojrg0quor18spps69iktv2pvp9.apps.googleusercontent.com" />
         <meta name="google-site-verification" content="RqhEfADoIZofqXSGw9vHoh2AIaq45u-2iHEdhhV8ns8" />
         {/* Google Tag (Google Analytics) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GXM4YEPGPR"></script>
-        <Script
-          id='g-tag'
-        >
-          {`window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+        {dataConsent ? 
+          <>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-GXM4YEPGPR"></script>
+            <Script
+              id='g-tag'
+            >
+              {`window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              
+              gtag('js', new Date());
 
-          gtag('config', 'G-GXM4YEPGPR', { 'cookie_flags': 'SameSite=None; Secure' });`}
-        </Script>
+              gtag('config', 'G-GXM4YEPGPR', { 'cookie_flags': 'SameSite=None; Secure' });`}
+            </Script>
+          </>
+        : null}
+        
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} flex flex-col h-screen`}
