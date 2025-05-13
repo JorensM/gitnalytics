@@ -50,8 +50,8 @@ export async function GET(request: NextRequest) {
       },
       customer: params.customer || undefined,
       mode: 'subscription',
-      success_url: `${process.env.APP_URL}/after-checkout?success=true&session_id={CHECKOUT_SESSION_ID}&renewed=${!!params.customer}`,
-      cancel_url: `${process.env.APP_URL}/checkout?canceled=true`,
+      success_url: `${APP_URL}/after-checkout?success=true&session_id={CHECKOUT_SESSION_ID}&renewed=${!!params.customer}`,
+      cancel_url: `${APP_URL}/checkout?canceled=true`,
     });
 
     if(!session.url) {
