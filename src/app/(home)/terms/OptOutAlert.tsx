@@ -11,7 +11,9 @@ export default function OptOutAlert( { display = true }: { display?: boolean }) 
         if(firstRenderOccured.current) return;
         firstRenderOccured.current = true;
         const _display = display && searchParams.get('optedOut') === 'true';
-        if(_display) alert('Please refresh the page for opt-out to take action');
+        if(_display) {
+            location.search = '';
+        }
     }, [])
     return <></>;
 }
