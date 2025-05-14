@@ -1,4 +1,4 @@
-import { getStripeCustomerID, getSubscriptionActive } from './stripe';
+import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled } from './stripe';
 
 let supabaseError = false;
 let supabaseNoUser = false;
@@ -113,3 +113,41 @@ describe('getSubscriptionActive()', () => {
         expect(active).toBeTruthy();
     })
 });
+
+describe('getSubscriptionCancelled()', () => {
+    it('Should return true if there are no active subscriptions or all subscriptions have been cancelled', async () => {
+        let active = await getSubscriptionCancelled();
+        expect(active).toBeTruthy();
+
+        subscriptionsToReturn = [
+            {
+                canceled_at: '123'
+            },
+            {
+                canceled_at: '123'
+            }
+        ];
+
+        active = await getSubscriptionCancelled();
+        expect(active).toBeTruthy();
+    });
+
+    it('Should return false if there is at least one active subscription', async () => {
+        subscriptionsToReturn = [
+            {
+                canceled_at: '123'
+            },
+            {}
+        ];
+
+        let active = await getSubscriptionCancelled();
+        expect(active).toBeFalsy();
+
+        subscriptionsToReturn = [
+            {}
+        ];
+
+        active = await getSubscriptionCancelled();
+        expect(active).toBeFalsy();
+    })
+})
