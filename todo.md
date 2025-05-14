@@ -1,4 +1,5 @@
 
+* Unit tests and begin TDD
 * Add required Stripe details to website https://support.stripe.com/questions/business-website-for-account-activation-faq
 * Left nav is wrong height after generating report
 * Add loading indicator for platform logout buttons

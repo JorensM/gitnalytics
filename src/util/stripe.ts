@@ -6,7 +6,10 @@ export const getStripeCustomerID = async () => {
     const supabase = await createClient();
     const { data: { user }, error } = await supabase.auth.getUser();
     if(error){
-        throw error;
+        throw 'Supabase error: ' + error;
+    }
+    if(!user) {
+        throw 'No user found';
     }
     const stripeCustomerID = user?.user_metadata.stripe_customer_id as string;
     return stripeCustomerID;
