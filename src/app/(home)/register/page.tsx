@@ -46,8 +46,7 @@ export default async function RegisterPage() {
                 </p>
                 <button>Register</button>
                 <p className='text-sm'>
-                    If you'd like to get a demo of the tool without providing
-                    payment information, please reach out to me directly at&nbsp;
+                    If you'd like to get a demo before registering, please reach out at
                     <MailLink />
                 </p>
             </form>
