@@ -1,8 +1,9 @@
-import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled } from './stripe';
+import moment from 'moment';
+import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled, getSubscriptionStatus } from './stripe';
 
 let supabaseError = false;
 let supabaseNoUser = false;
-let subscriptionsToReturn: any[] = [];
+let subscriptionsToReturn: { canceled_at?: number, ended_at?: number }[] = [];
 
 beforeEach(() => {
     supabaseError = false;
@@ -83,10 +84,10 @@ describe('getSubscriptionActive()', () => {
 
         subscriptionsToReturn = [
             {
-                ended_at: '123'
+                ended_at: 123
             },
             {
-                ended_at: '123'
+                ended_at: 123
             }
         ];
 
@@ -98,7 +99,7 @@ describe('getSubscriptionActive()', () => {
         subscriptionsToReturn = [
             {},
             {
-                ended_at: '123'
+                ended_at: 123
             }
         ];
 
@@ -121,10 +122,10 @@ describe('getSubscriptionCancelled()', () => {
 
         subscriptionsToReturn = [
             {
-                canceled_at: '123'
+                canceled_at: 123
             },
             {
-                canceled_at: '123'
+                canceled_at: 123
             }
         ];
 
@@ -135,7 +136,7 @@ describe('getSubscriptionCancelled()', () => {
     it('Should return false if there is at least one active subscription', async () => {
         subscriptionsToReturn = [
             {
-                canceled_at: '123'
+                canceled_at: 123
             },
             {}
         ];
@@ -151,3 +152,76 @@ describe('getSubscriptionCancelled()', () => {
         expect(active).toBeFalsy();
     })
 })
+
+describe('getSubscriptionStatus()', () => {
+    it('Should return isActive: true if subscription is active', async () => {
+
+        subscriptionsToReturn = [
+            {}
+        ]
+
+        const status = await getSubscriptionStatus();
+
+        expect(status.isActive).toBeTruthy();
+    })
+
+    it('Should return isActive: false if subscription is not active', async () => {
+        subscriptionsToReturn = [
+            {
+                ended_at: 123
+            }
+        ]
+
+        const status = await getSubscriptionStatus();
+
+        expect(status.isActive).toBeFalsy();
+    });
+
+    it('Should return isCancelled: true if subscription is cancelled', async () => {
+        subscriptionsToReturn = [
+            {
+                canceled_at: 123
+            }
+        ]
+
+        const status = await getSubscriptionStatus();
+
+        expect(status.isCancelled).toBeTruthy();
+    })
+
+    it('Should return isCancelled: false if subscription is not cancelled', async () => {
+        subscriptionsToReturn = [
+            {}
+        ]
+
+        const status = await getSubscriptionStatus();
+
+        expect(status.isCancelled).toBeFalsy();
+    });
+
+    it('Should return daysLeft: 0 if there are not subscriptions', async () => {
+        subscriptionsToReturn = [];
+
+        const status = await getSubscriptionStatus();
+
+        expect(status.daysLeft).toStrictEqual(0);
+    });
+
+    it('Should return daysLeft: 0 if there are no subscriptions or if subscription is cancelled', async () => {
+        subscriptionsToReturn = [];
+
+        const status = await getSubscriptionStatus();
+
+        expect(status.daysLeft).toStrictEqual(0);
+
+        subscriptionsToReturn = [{
+            canceled_at: moment().subtract(1, 'days').unix()
+        }]
+
+        expect(status.daysLeft).toStrictEqual(0);
+    })
+
+    it('Should return daysLeft: x where x is number of days left before subscription gets cancelled (if it has been cancelled)', () => {
+
+    });
+});

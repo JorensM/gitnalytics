@@ -54,17 +54,12 @@ export async function getSubscriptionStatus() {
 
     const isActive = await getSubscriptionActive();
     const isCancelled = await getSubscriptionCancelled();
-    console.log('is cancelled: ', isCancelled);
     const trial = null;
-    let daysLeft;
+    let daysLeft = 0;
 
     const { data: subscriptions } = await stripe.subscriptions.list({
         customer: stripeCustomerID
     })
-
-    if(!subscriptions.length) {
-        daysLeft = 0;
-    }
 
     // console.log(subscriptions);
 
