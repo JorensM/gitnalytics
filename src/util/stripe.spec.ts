@@ -1,7 +1,14 @@
-import { getStripeCustomerID } from './stripe';
+import { getStripeCustomerID, getSubscriptionActive } from './stripe';
 
 let supabaseError = false;
 let supabaseNoUser = false;
+let subscriptionsToReturn: any[] = [];
+
+beforeEach(() => {
+    supabaseError = false;
+    supabaseNoUser = false;
+    subscriptionsToReturn = [];
+})
 
 jest.mock('./supabase/server', () => ({
     createClient: async () => ({
@@ -38,12 +45,20 @@ jest.mock('./supabase/server', () => ({
 }))
 
 
+
+jest.mock('./createStripeClient', () => () => ({
+    subscriptions: {
+        list: async (params: { customer: string }) => {
+                return { data: subscriptionsToReturn }
+        }
+    }
+}))
+
+
+
 describe('getStripeCustomerID()', () => {
 
-    beforeEach(() => {
-        supabaseError = false;
-        supabaseNoUser = false;
-    })
+    
 
     it('Should return the Stripe customer ID of the current customer', async () => {
         const customerID = await getStripeCustomerID();
@@ -58,5 +73,43 @@ describe('getStripeCustomerID()', () => {
     it('Should throw error if supabase client returned error', async () => {
         supabaseError = true;
         expect(getStripeCustomerID).rejects.toContain('Supabase error:');
+    })
+});
+
+describe('getSubscriptionActive()', () => {
+    it('Should return false if there are no active subscriptions', async () => {
+        let active = await getSubscriptionActive();
+        expect(active).toBeFalsy();
+
+        subscriptionsToReturn = [
+            {
+                ended_at: '123'
+            },
+            {
+                ended_at: '123'
+            }
+        ];
+
+        active = await getSubscriptionActive();
+        expect(active).toBeFalsy();
+    });
+
+    it('Should return true if there is at least one active subscription', async () => {
+        subscriptionsToReturn = [
+            {},
+            {
+                ended_at: '123'
+            }
+        ];
+
+        let active = await getSubscriptionActive();
+        expect(active).toBeTruthy();
+
+        subscriptionsToReturn = [
+            {}
+        ];
+
+        active = await getSubscriptionActive();
+        expect(active).toBeTruthy();
     })
 });
