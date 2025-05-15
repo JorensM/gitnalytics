@@ -12,7 +12,7 @@ export async function createClientIfNull(supabaseClient?: SupabaseClient) {
 
 export async function getSupabaseUser(supabaseClient: SupabaseClient) {
 
-    const { data: { user }, error } = await supabase.auth.getUser();
+    //const { data: { user }, error } = await supabase.auth.getUser();
 }
 
 export async function isLoggedInToGitHub() {
