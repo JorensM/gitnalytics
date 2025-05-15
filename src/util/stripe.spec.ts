@@ -1,61 +1,20 @@
 import moment from 'moment';
-import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled, getSubscriptionStatus } from './stripe';
+import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled, getSubscriptionStatus, getSubscriptionStatusMessage } from './stripe';
 
 let supabaseError = false;
 let supabaseNoUser = false;
-let subscriptionsToReturn: { canceled_at?: number, ended_at?: number }[] = [];
+let subscriptionsToReturn: { 
+    canceled_at?: number, 
+    ended_at?: number,
+    cancel_at?: number,
+    current_period_end?: number
+}[] = [];
 
 beforeEach(() => {
     supabaseError = false;
     supabaseNoUser = false;
     subscriptionsToReturn = [];
 })
-
-jest.mock('./supabase/server', () => ({
-    createClient: async () => ({
-        auth: {
-            getUser: () => {
-                if(supabaseError) {
-                    return {
-                        data: {
-                            user: null
-                        },
-                        error: 'error'
-                    }
-                } if(supabaseNoUser) {
-                    return {
-                        data: {
-                            user: null
-                        }
-                    }
-                } else {
-                    return {
-                        data: {
-                            user: {
-                                user_metadata: {
-                                    stripe_customer_id: 'stripe_customer_id'
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    })
-    
-}))
-
-
-
-jest.mock('./createStripeClient', () => () => ({
-    subscriptions: {
-        list: async (params: { customer: string }) => {
-                return { data: subscriptionsToReturn }
-        }
-    }
-}))
-
-
 
 describe('getStripeCustomerID()', () => {
 
@@ -199,7 +158,7 @@ describe('getSubscriptionStatus()', () => {
         expect(status.isCancelled).toBeFalsy();
     });
 
-    it('Should return daysLeft: 0 if there are not subscriptions', async () => {
+    it('Should return daysLeft: 0 if there are no subscriptions', async () => {
         subscriptionsToReturn = [];
 
         const status = await getSubscriptionStatus();
@@ -207,21 +166,78 @@ describe('getSubscriptionStatus()', () => {
         expect(status.daysLeft).toStrictEqual(0);
     });
 
-    it('Should return daysLeft: 0 if there are no subscriptions or if subscription is cancelled', async () => {
-        subscriptionsToReturn = [];
+    it('Should return daysLeft: 0 if subscription has ended', async () => {
+        subscriptionsToReturn = [{
+            cancel_at: moment().subtract(1, 'days').unix()
+        }]
 
         const status = await getSubscriptionStatus();
 
-        expect(status.daysLeft).toStrictEqual(0);
-
-        subscriptionsToReturn = [{
-            canceled_at: moment().subtract(1, 'days').unix()
-        }]
 
         expect(status.daysLeft).toStrictEqual(0);
     })
 
-    it('Should return daysLeft: x where x is number of days left before subscription gets cancelled (if it has been cancelled)', () => {
+    it('Should return daysLeft: x where x is number of days left before subscription gets cancelled (if it has been cancelled)', async () => {
+        subscriptionsToReturn = [
+            {
+                canceled_at: 123,
+                cancel_at: moment().add(8, 'days').unix()
+            }
+        ]
 
+        const status = await getSubscriptionStatus();
+
+        expect(status.daysLeft).toStrictEqual(7);
+    });
+
+
+    it('Should return nextBillingDate with the next billing date in format YYYY-MM-DD', async () => {
+        const billingDate = moment().add(7, 'days');
+        subscriptionsToReturn = [
+            {
+                current_period_end: billingDate.unix()
+            }
+        ];
+
+        const status = await getSubscriptionStatus();
+
+        expect(status.nextBillingDate).toEqual(billingDate.format('YYYY-MM-DD'));
     });
 });
+
+
+describe('getSubscriptionMessage()', () => {
+    it("Should return 'Subscription active' if subscription is active", async () => {
+        subscriptionsToReturn = [{}];
+
+        const message = await getSubscriptionStatusMessage();
+
+        expect(message).toEqual('Subscription active');
+    });
+
+    it("Should return 'Subscription ended' if subscription has ended", async () => {
+        subscriptionsToReturn = [{
+            ended_at: 123,
+            canceled_at: 123,
+            cancel_at: moment().subtract(1, 'day').unix()
+        }];
+
+        const message = await getSubscriptionStatusMessage();
+
+        expect(message).toEqual('Subscription ended');
+    })
+
+    it("Otherwise should return 'x days until subscription ends' where x is number of days until subscription ends", async () => {
+
+        const billingDate = moment().add(8, 'days');
+
+        subscriptionsToReturn = [{
+            canceled_at: 123,
+            cancel_at: billingDate.unix()
+        }]
+
+        const message = await getSubscriptionStatusMessage();
+
+        expect(message).toEqual('7 days until subscription ends');
+    })
+})

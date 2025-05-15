@@ -40,7 +40,7 @@ export default async function RootLayout({
 
   const subscriptionStatus = loggedIn ? await getSubscriptionStatus() : undefined;
 
-  const dataConsent = (await cookies()).get('data-consent')?.value === 'true';
+  const collectData = (await cookies()).get('disable-stats')?.value !== 'true';
 
   return (
     <html lang="en">
@@ -48,7 +48,7 @@ export default async function RootLayout({
         <meta name="google-signin-client_id" content="961657177961-62qmq2ojrg0quor18spps69iktv2pvp9.apps.googleusercontent.com" />
         <meta name="google-site-verification" content="RqhEfADoIZofqXSGw9vHoh2AIaq45u-2iHEdhhV8ns8" />
         {/* Google Tag (Google Analytics) */}
-        {dataConsent ? 
+        {collectData ? 
           <>
             <script async src="https://www.googletagmanager.com/gtag/js?id=G-GXM4YEPGPR"></script>
             <Script

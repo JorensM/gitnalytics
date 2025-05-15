@@ -5,14 +5,14 @@ import { redirect } from 'next/navigation';
 export const handleOptButtonClick = async () => {
         'use server';
         const _cookies = await cookies();
-        const prevOptedIn = _cookies.get('data-consent')?.value === 'true';
-        if(prevOptedIn) {
-            console.log('opting out')
-            _cookies.delete('data-consent');
-        } else {
+        const prevOptedOut = _cookies.get('disable-stats')?.value === 'true';
+        if(prevOptedOut) {
             console.log('opting in');
-            _cookies.set('data-consent', 'true');
+            _cookies.delete('disable-stats');
+        } else {
+            console.log('opting out')
+            _cookies.set('disable-stats', 'true');
         }
         revalidatePath('/terms', 'layout');
-        redirect('/terms?' + (prevOptedIn ? ('optedOut=true') : ''));
+        redirect('/terms?' + (!prevOptedOut ? ('optedOut=true') : ''));
 }

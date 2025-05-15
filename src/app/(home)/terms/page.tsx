@@ -8,7 +8,7 @@ export default async function TermsPage() {
 
     const _cookies = await cookies();
 
-    const optedIn = _cookies.get('data-consent')?.value === 'true';
+    const optedOut = _cookies.get('disable-stats')?.value === 'true';
 
     return (
         <div className='p-8 max-w-[800px] flex flex-col gap-2'>
@@ -24,23 +24,16 @@ export default async function TermsPage() {
             </p>
             <h3 className='text-lg font-semibold'>User activity and statistics data</h3>
             <p>
-                By default, this platform does not collect any data related to user
-                activity, but you can opt in to participate in user activity data
-                collection to help us improve the platform.
-                If you agree to user activity data collection,
-                this platform will collect the following anonymous data about user activity
-                using Google Analytics:
+                By default, this platform collects some anonymous data using Google Analytics, namely:
             </p>
             <ul className='pl-2'>
-                    <li>Visits</li>
+                    <li>Page visits</li>
                     <li>Non-specific page events (clicks, scrolls, page navigation)</li>
-                    <li>Region and city</li>
-                    <li>OS and browser type</li>
                     <li>Referring website</li>
                 </ul>
             <p>
-                You are currently {optedIn ? 'opted in' : 'not opted in'} to user activity data collection.<br/>
-                If you wish to {optedIn ? 'opt out' : 'opt in'}, click the link below:
+                {optedOut ? 'You are currently opted out of data collection.' : ''}
+                If you wish to {!optedOut ? 'opt out' : 'opt in'}, click the link below:
             </p>
             <form
                 action={handleOptButtonClick}
@@ -48,7 +41,7 @@ export default async function TermsPage() {
                 <button
                     className='text-blue-400 border-none w-fit py-0 px-0 hover:bg-transparent hover:underline'
                 >
-                    {optedIn ? 'Opt out': 'Opt in'}
+                    {!optedOut ? 'Opt out': 'Opt in'}
                 </button>
             </form>
         </div>

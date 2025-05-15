@@ -79,10 +79,11 @@ export async function getSubscriptionStatus() {
         isCancelled,
         daysLeft,
         nextBillingDate,
-        ended: isCancelled && !daysLeft
+        ended: isCancelled && (!daysLeft || daysLeft < 1)
     }
 }
 
+// todo: Refactor to not be async and not depend on stripe functions, rather just accept a subscriptionStatus arg
 export async function getSubscriptionStatusMessage(_isActive?: boolean) {
     const stripe = createStripeClient();
 

@@ -1,4 +1,19 @@
 import { createClient } from './supabase/server';
+import { SupabaseClient } from '@supabase/supabase-js';
+
+/**
+ * Create a supabase client if arg is not already a supabase client. Otherwise
+ * just return the arg
+ * @param supabaseClient 
+ */
+export async function createClientIfNull(supabaseClient?: SupabaseClient) {
+    return supabaseClient || await createClient();
+}
+
+export async function getSupabaseUser(supabaseClient: SupabaseClient) {
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+}
 
 export async function isLoggedInToGitHub() {
     const supabase = await createClient();
