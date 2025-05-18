@@ -9,7 +9,7 @@ Goals:
 
 PH Milestone todo:
 
-* Design logo
+* ~~Design logo~~
 
 Todo:
 
