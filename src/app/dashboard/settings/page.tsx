@@ -1,6 +1,7 @@
 import ManageSubscriptionButton from '@/components/buttons/ManageSubscriptionButton';
 import RenewSubscriptionButton from '@/components/buttons/RenewSubscriptionButton';
 import Link from 'next/link';
+import deleteAccountAction from './deleteAccountAction';
 
 export default function SettingsPage() {
     return (
@@ -13,6 +14,7 @@ export default function SettingsPage() {
             <section>
                 <h2>Account</h2>
                 <Link href='/dashboard/settings/change-password'>Change Password</Link>
+                <button>Delete Account</button>
             </section>
         </div>
     )

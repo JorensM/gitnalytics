@@ -139,7 +139,7 @@ export async function getCurrentUser(client: SupabaseClient) {
     return user;
 }
 
-export async function deleteAccount(client: SupabaseClient) {
+export async function deleteAccount(client?: SupabaseClient) {
 
     const supabase = await createClientIfNull(client);
 
