@@ -5,7 +5,7 @@ PH milestone tasks:
 * ~~Use repository events endpoint and 'PushEvent' objects to get dates for when~~
 ~~commits were pushed instead of when they were made on developer's local env 1h~~ actual: 26m
 * ~~Prevent registration if account already exists 1h~~ actual: 1.5h
-* Handle error when customer is not found 1h
+* ~~Handle error when customer is not found 1h~~ actual: 46min
 * Delete account and data feature 1h
     * Cancel Stripe subscription when user gets deleted 
     (listen for delete webhook so that accounts can be properly deleted from Supabase dashboard)
