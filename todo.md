@@ -2,8 +2,8 @@
 PH milestone tasks:
 
 * ~~Begin TDD~~
-* Use repository events endpoint and 'PushEvent' objects to get dates for when
-commits were pushed instead of when they were made on developer's local env 1h
+* ~~Use repository events endpoint and 'PushEvent' objects to get dates for when~~
+~~commits were pushed instead of when they were made on developer's local env 1h~~
 * Prevent registration if account already exists 1h
 * Handle error when customer is not found 1h
 * Delete account and data feature 1h
