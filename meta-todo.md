@@ -7,10 +7,13 @@ Goals:
 * Improve product based on feedback
 * Leave MVP stage
 
+PH Milestone todo:
+
+* Design logo
+
 Todo:
 
 * Follow, engage and connect with similar IG accounts
-* Design logo
 * Look for a beta tester
 * Do outreach
 * Run paid ads

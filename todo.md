@@ -10,6 +10,8 @@ PH milestone tasks:
 * Add required Stripe details to website https://support.stripe.com/questions/business-website-for-account-activation-faq
 * Audit site for compliance (GDPR, PCI) 1h
 * Pricing page 1h
+* About page with attribution for logo:
+    * Logo by <a href="https://www.vecteezy.com/members/ykadesign">Yazid Kun</a>
 
 1h:
 * Left nav is wrong height after generating report
