@@ -1,21 +1,13 @@
 import '@/util/supabase/server'
 
-type Subscription = { 
-    canceled_at?: number, 
-    ended_at?: number,
-    cancel_at?: number,
-    current_period_end?: number
-}
-
 const supabaseConfig: {
-    subscriptionsToReturn: Subscription[],
+    
     supabaseError: boolean,
     supabaseNoUser: boolean,
     users: any[]
 } = {
     supabaseError: false,
     supabaseNoUser: false,
-    subscriptionsToReturn: [],
     users: [
         {
             email: 'email@found.com',
@@ -92,16 +84,6 @@ jest.mock('../../util/supabase/server', () => ({
         }
     })
     
-}))
-
-
-
-jest.mock('../../util/createStripeClient', () => () => ({
-    subscriptions: {
-        list: async (params: { customer: string }) => {
-                return { data: supabaseConfig.subscriptionsToReturn }
-        }
-    }
 }))
 
 export default supabaseConfig;

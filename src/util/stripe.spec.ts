@@ -1,11 +1,12 @@
 import moment from 'moment';
 import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled, getSubscriptionStatus, getSubscriptionStatusMessage } from './stripe';
 import supabaseConfig from '@/__tests__/__mocks__/supabase';
+import stripeConfig from '@/__tests__/__mocks__/stripe';
 
 beforeEach(() => {
     supabaseConfig.supabaseError = false;
     supabaseConfig.supabaseNoUser = false;
-    supabaseConfig.subscriptionsToReturn = [];
+    stripeConfig.subscriptionsToReturn = [];
 })
 
 describe('getStripeCustomerID()', () => {
@@ -31,7 +32,7 @@ describe('getSubscriptionActive()', () => {
         let active = await getSubscriptionActive();
         expect(active).toBeFalsy();
 
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {
                 ended_at: 123
             },
@@ -45,7 +46,7 @@ describe('getSubscriptionActive()', () => {
     });
 
     it('Should return true if there is at least one active subscription', async () => {
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {},
             {
                 ended_at: 123
@@ -55,12 +56,16 @@ describe('getSubscriptionActive()', () => {
         let active = await getSubscriptionActive();
         expect(active).toBeTruthy();
 
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {}
         ];
 
         active = await getSubscriptionActive();
         expect(active).toBeTruthy();
+    });
+
+    it('If Stripe customer with given customer_id is not found, log user out', () => {
+
     })
 });
 
@@ -69,7 +74,7 @@ describe('getSubscriptionCancelled()', () => {
         let active = await getSubscriptionCancelled();
         expect(active).toBeTruthy();
 
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {
                 canceled_at: 123
             },
@@ -83,7 +88,7 @@ describe('getSubscriptionCancelled()', () => {
     });
 
     it('Should return false if there is at least one active subscription', async () => {
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {
                 canceled_at: 123
             },
@@ -93,7 +98,7 @@ describe('getSubscriptionCancelled()', () => {
         let active = await getSubscriptionCancelled();
         expect(active).toBeFalsy();
 
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {}
         ];
 
@@ -105,7 +110,7 @@ describe('getSubscriptionCancelled()', () => {
 describe('getSubscriptionStatus()', () => {
     it('Should return isActive: true if subscription is active', async () => {
 
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {}
         ]
 
@@ -115,7 +120,7 @@ describe('getSubscriptionStatus()', () => {
     })
 
     it('Should return isActive: false if subscription is not active', async () => {
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {
                 ended_at: 123
             }
@@ -127,7 +132,7 @@ describe('getSubscriptionStatus()', () => {
     });
 
     it('Should return isCancelled: true if subscription is cancelled', async () => {
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {
                 canceled_at: 123
             }
@@ -139,7 +144,7 @@ describe('getSubscriptionStatus()', () => {
     })
 
     it('Should return isCancelled: false if subscription is not cancelled', async () => {
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {}
         ]
 
@@ -149,7 +154,7 @@ describe('getSubscriptionStatus()', () => {
     });
 
     it('Should return daysLeft: 0 if there are no subscriptions', async () => {
-        supabaseConfig.subscriptionsToReturn = [];
+        stripeConfig.subscriptionsToReturn = [];
 
         const status = await getSubscriptionStatus();
 
@@ -157,7 +162,7 @@ describe('getSubscriptionStatus()', () => {
     });
 
     it('Should return daysLeft: 0 if subscription has ended', async () => {
-        supabaseConfig.subscriptionsToReturn = [{
+        stripeConfig.subscriptionsToReturn = [{
             cancel_at: moment().subtract(1, 'days').unix()
         }]
 
@@ -168,7 +173,7 @@ describe('getSubscriptionStatus()', () => {
     })
 
     it('Should return daysLeft: x where x is number of days left before subscription gets cancelled (if it has been cancelled)', async () => {
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {
                 canceled_at: 123,
                 cancel_at: moment().add(8, 'days').unix()
@@ -183,7 +188,7 @@ describe('getSubscriptionStatus()', () => {
 
     it('Should return nextBillingDate with the next billing date in format YYYY-MM-DD', async () => {
         const billingDate = moment().add(7, 'days');
-        supabaseConfig.subscriptionsToReturn = [
+        stripeConfig.subscriptionsToReturn = [
             {
                 current_period_end: billingDate.unix()
             }
@@ -198,7 +203,7 @@ describe('getSubscriptionStatus()', () => {
 
 describe('getSubscriptionMessage()', () => {
     it("Should return 'Subscription active' if subscription is active", async () => {
-        supabaseConfig.subscriptionsToReturn = [{}];
+        stripeConfig.subscriptionsToReturn = [{}];
 
         const message = await getSubscriptionStatusMessage();
 
@@ -206,7 +211,7 @@ describe('getSubscriptionMessage()', () => {
     });
 
     it("Should return 'Subscription ended' if subscription has ended", async () => {
-        supabaseConfig.subscriptionsToReturn = [{
+        stripeConfig.subscriptionsToReturn = [{
             ended_at: 123,
             canceled_at: 123,
             cancel_at: moment().subtract(1, 'day').unix()
@@ -221,7 +226,7 @@ describe('getSubscriptionMessage()', () => {
 
         const billingDate = moment().add(8, 'days');
 
-        supabaseConfig.subscriptionsToReturn = [{
+        stripeConfig.subscriptionsToReturn = [{
             canceled_at: 123,
             cancel_at: billingDate.unix()
         }]
