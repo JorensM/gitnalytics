@@ -2,6 +2,8 @@
 PH milestone tasks:
 
 * ~~Begin TDD~~
+* Use repository events endpoint and 'PushEvent' objects to get dates for when
+commits were pushed instead of when they were made on developer's local env 1h
 * Prevent registration if account already exists 1h
 * Handle error when customer is not found 1h
 * Delete account and data feature 1h
@@ -10,6 +12,7 @@ PH milestone tasks:
 * Add required Stripe details to website https://support.stripe.com/questions/business-website-for-account-activation-faq
 * Audit site for compliance (GDPR, PCI) 1h
 * Pricing page 1h
+* Add logo
 * About page with attribution for logo:
     * Logo by <a href="https://www.vecteezy.com/members/ykadesign">Yazid Kun</a>
 
@@ -23,7 +26,7 @@ PH milestone tasks:
 * Check website for errors 1h + 0-4h of fixing
 * Unit tests - remaining time till launch
 
-Total estimate: 7h-11h
+Total estimate: 8h-12h
 
 PH launch planned for June 1st
 
