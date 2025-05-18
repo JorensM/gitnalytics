@@ -57,6 +57,6 @@ describe('logout()', () => {
         await logout(supabase);
 
         expect(logoutSpy).toHaveBeenCalled();
-        expect(redirectSpy).toHaveBeenCalledWith('/');
-    })
+        expect(redirectSpy).toHaveBeenCalledWith('/login?error=Stripe%20customer%20ID%20not%20found');
+    });
 })

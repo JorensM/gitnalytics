@@ -20,7 +20,7 @@ export default function Login() {
   const emailConfirmed = params.get('email_confirmed') === 'true';
   const passwordChanged = params.get('password_changed') === 'true';
 
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(params.get('error'));
 
   const message = useMemo(() => (
     justSubscribed ? 

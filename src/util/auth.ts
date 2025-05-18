@@ -58,7 +58,7 @@ export async function logout(supabaseClient?: SupabaseClient) {
         throw res.error;
     }
 
-    redirect('/');
+    redirect('/login?error=Stripe%20customer%20ID%20not%20found');
 }
 
 export async function isLoggedInToGitHub() {
