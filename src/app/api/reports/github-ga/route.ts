@@ -4,12 +4,8 @@ import moment from 'moment';
 import { NextRequest, NextResponse } from 'next/server';
 
 export type Commit = {
-    commit: {
-        message: string,
-        author: {
-            date: string
-        }
-    }
+    message: string,
+    pushDate?: string
 }
 
 const convertCommitHistoryToGARowData = (commitHistory: Commit[], startDate: string, endDate: string) => {
@@ -22,7 +18,7 @@ const convertCommitHistoryToGARowData = (commitHistory: Commit[], startDate: str
 
     for(let day = 0; day < numDays; day++) {
         const date = moment(startDateM).add(day, 'days');
-        const commits = commitHistory.filter(commit => moment(commit.commit.author.date).isSame(date, 'date'));
+        const commits = commitHistory.filter(commit => moment(commit.pushDate).isSame(date, 'date'));
         rows.push(commits);
     }
 
@@ -40,6 +36,27 @@ const generateReport = (gaRows: any[], ghRows: Commit[][], startDate: string, en
         date: moment(startDateM).add(day, 'days').format('YYYY-MM-DD')
     }))
     return report;
+}
+
+type GHEvent = {
+    type: 'PushEvent' | string
+}
+
+type GHPushEvent = {
+    type: 'PushEvent',
+    payload: {
+        commits: {
+            message: string
+        }[]
+    },
+    created_at: string
+}
+
+const pushEventsToCommits = (pushEvents: GHPushEvent[]) => {
+    return pushEvents.flatMap(event => event.payload.commits.map(commit => ({
+        ...commit,
+        pushDate: event.created_at
+    })))
 }
 
 export async function GET(req: NextRequest) {
@@ -62,17 +79,23 @@ export async function GET(req: NextRequest) {
 
     // console.log('gaToken: ', data.gaToken);
 
-    const res = await fetch('https://api.github.com/repos/' + data.repo + '/commits?since=' + moment(data.dateFrom).toISOString() + '&until=' + moment(data.dateTo).toISOString(), {
+    // /commits?since=' + moment(data.dateFrom).toISOString() + '&until=' + moment(data.dateTo).toISOString()
+
+    const res = await fetch('https://api.github.com/repos/' + data.repo + '/events', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + data.gitToken
         }
-    })
+    });
 
     if(res.status !== 200) {
         throw new Error (await res.text())
     }
-    const githubData = await res.json();
+    const githubData: GHPushEvent[] = await res.json();
+
+    const pushEvents: GHPushEvent[] = githubData.filter(event => event.type === 'PushEvent');
+
+    const commits = pushEventsToCommits(pushEvents);
 
     const gaRes = await fetch('https://analyticsdata.googleapis.com/v1beta/' + property + ':runReport', {
         method: "POST",
@@ -107,7 +130,8 @@ export async function GET(req: NextRequest) {
 
     // console.log(gaData);
 
-    const commitHistoryRows = convertCommitHistoryToGARowData(githubData, data.dateFrom, data.dateTo);
+    // todo: test to ensure that the pushDate of commits is not the same as the creation date of the commits
+    const commitHistoryRows = convertCommitHistoryToGARowData(commits, data.dateFrom, data.dateTo);
 
     const rows = generateReport(gaData.rows, commitHistoryRows, data.dateFrom, data.dateTo);
 
