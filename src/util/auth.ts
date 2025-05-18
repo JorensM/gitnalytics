@@ -10,10 +10,45 @@ export async function createClientIfNull(supabaseClient?: SupabaseClient) {
     return supabaseClient || await createClient();
 }
 
-export async function getSupabaseUser(supabaseClient: SupabaseClient) {
+/**
+ * Retrieves a user's ID by their email address using a database function.
+ * @param {string} email - The email address to look up.
+ * @returns {Promise<string | null>} A Promise that resolves to the user's ID, or null if not found.
+ */
+export async function getUserIDByEmail(email: string, supabaseClient?: SupabaseClient): Promise<string | null> {
+    const supabase = await createClientIfNull(supabaseClient);
+    const { data, error } = await supabase.rpc('get_user_id_by_email', { p_email: email });
+
+    if (error) {
+        console.error('getUserIDByEmail error', error);
+        return null;
+    }
+
+    return data || null;
+}
+
+export async function getDBUserByEmail(email: string, supabaseClient?: SupabaseClient) {
+
+    const supabase = await createClientIfNull(supabaseClient);
+
+    const userID = await getUserIDByEmail(email, supabase);
+
+    if(!userID) {
+        return null;
+    }
+
+    const { data: { user }, error } = await supabase.auth.admin.getUserById(userID);
+
+    if(error) {
+        throw error;
+    }
+
+    return user;
 
     //const { data: { user }, error } = await supabase.auth.getUser();
 }
+
+
 
 export async function isLoggedInToGitHub() {
     const supabase = await createClient();

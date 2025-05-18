@@ -1,6 +1,7 @@
 
 PH milestone tasks:
 
+* ~~Begin TDD~~
 * Prevent registration if account already exists 1h
 * Handle error when customer is not found 1h
 * Delete account and data feature 1h
@@ -18,7 +19,7 @@ PH milestone tasks:
 * Make page titles unique for analytics
 
 * Check website for errors 1h + 0-4h of fixing
-* Unit tests and begin TDD
+* Unit tests - remaining time till launch
 
 Total estimate: 7h-11h
 
@@ -26,6 +27,7 @@ PH launch planned for June 1st
 
 Tasks:
 
+* use GH issues for tasks
 
 Unplanned:
 

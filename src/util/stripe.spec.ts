@@ -1,24 +1,14 @@
 import moment from 'moment';
 import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled, getSubscriptionStatus, getSubscriptionStatusMessage } from './stripe';
-
-let supabaseError = false;
-let supabaseNoUser = false;
-let subscriptionsToReturn: { 
-    canceled_at?: number, 
-    ended_at?: number,
-    cancel_at?: number,
-    current_period_end?: number
-}[] = [];
+import supabaseConfig from '@/__tests__/__mocks__/supabase';
 
 beforeEach(() => {
-    supabaseError = false;
-    supabaseNoUser = false;
-    subscriptionsToReturn = [];
+    supabaseConfig.supabaseError = false;
+    supabaseConfig.supabaseNoUser = false;
+    supabaseConfig.subscriptionsToReturn = [];
 })
 
 describe('getStripeCustomerID()', () => {
-
-    
 
     it('Should return the Stripe customer ID of the current customer', async () => {
         const customerID = await getStripeCustomerID();
@@ -26,12 +16,12 @@ describe('getStripeCustomerID()', () => {
     })
 
     it('Should throw error if no user is logged in', async () => {
-        supabaseNoUser = true;
+        supabaseConfig.supabaseNoUser = true;
         expect(getStripeCustomerID).rejects.toEqual('No user found');
     })
 
     it('Should throw error if supabase client returned error', async () => {
-        supabaseError = true;
+        supabaseConfig.supabaseError = true;
         expect(getStripeCustomerID).rejects.toContain('Supabase error:');
     })
 });
@@ -41,7 +31,7 @@ describe('getSubscriptionActive()', () => {
         let active = await getSubscriptionActive();
         expect(active).toBeFalsy();
 
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {
                 ended_at: 123
             },
@@ -55,7 +45,7 @@ describe('getSubscriptionActive()', () => {
     });
 
     it('Should return true if there is at least one active subscription', async () => {
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {},
             {
                 ended_at: 123
@@ -65,7 +55,7 @@ describe('getSubscriptionActive()', () => {
         let active = await getSubscriptionActive();
         expect(active).toBeTruthy();
 
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {}
         ];
 
@@ -79,7 +69,7 @@ describe('getSubscriptionCancelled()', () => {
         let active = await getSubscriptionCancelled();
         expect(active).toBeTruthy();
 
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {
                 canceled_at: 123
             },
@@ -93,7 +83,7 @@ describe('getSubscriptionCancelled()', () => {
     });
 
     it('Should return false if there is at least one active subscription', async () => {
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {
                 canceled_at: 123
             },
@@ -103,7 +93,7 @@ describe('getSubscriptionCancelled()', () => {
         let active = await getSubscriptionCancelled();
         expect(active).toBeFalsy();
 
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {}
         ];
 
@@ -115,7 +105,7 @@ describe('getSubscriptionCancelled()', () => {
 describe('getSubscriptionStatus()', () => {
     it('Should return isActive: true if subscription is active', async () => {
 
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {}
         ]
 
@@ -125,7 +115,7 @@ describe('getSubscriptionStatus()', () => {
     })
 
     it('Should return isActive: false if subscription is not active', async () => {
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {
                 ended_at: 123
             }
@@ -137,7 +127,7 @@ describe('getSubscriptionStatus()', () => {
     });
 
     it('Should return isCancelled: true if subscription is cancelled', async () => {
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {
                 canceled_at: 123
             }
@@ -149,7 +139,7 @@ describe('getSubscriptionStatus()', () => {
     })
 
     it('Should return isCancelled: false if subscription is not cancelled', async () => {
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {}
         ]
 
@@ -159,7 +149,7 @@ describe('getSubscriptionStatus()', () => {
     });
 
     it('Should return daysLeft: 0 if there are no subscriptions', async () => {
-        subscriptionsToReturn = [];
+        supabaseConfig.subscriptionsToReturn = [];
 
         const status = await getSubscriptionStatus();
 
@@ -167,7 +157,7 @@ describe('getSubscriptionStatus()', () => {
     });
 
     it('Should return daysLeft: 0 if subscription has ended', async () => {
-        subscriptionsToReturn = [{
+        supabaseConfig.subscriptionsToReturn = [{
             cancel_at: moment().subtract(1, 'days').unix()
         }]
 
@@ -178,7 +168,7 @@ describe('getSubscriptionStatus()', () => {
     })
 
     it('Should return daysLeft: x where x is number of days left before subscription gets cancelled (if it has been cancelled)', async () => {
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {
                 canceled_at: 123,
                 cancel_at: moment().add(8, 'days').unix()
@@ -193,7 +183,7 @@ describe('getSubscriptionStatus()', () => {
 
     it('Should return nextBillingDate with the next billing date in format YYYY-MM-DD', async () => {
         const billingDate = moment().add(7, 'days');
-        subscriptionsToReturn = [
+        supabaseConfig.subscriptionsToReturn = [
             {
                 current_period_end: billingDate.unix()
             }
@@ -208,7 +198,7 @@ describe('getSubscriptionStatus()', () => {
 
 describe('getSubscriptionMessage()', () => {
     it("Should return 'Subscription active' if subscription is active", async () => {
-        subscriptionsToReturn = [{}];
+        supabaseConfig.subscriptionsToReturn = [{}];
 
         const message = await getSubscriptionStatusMessage();
 
@@ -216,7 +206,7 @@ describe('getSubscriptionMessage()', () => {
     });
 
     it("Should return 'Subscription ended' if subscription has ended", async () => {
-        subscriptionsToReturn = [{
+        supabaseConfig.subscriptionsToReturn = [{
             ended_at: 123,
             canceled_at: 123,
             cancel_at: moment().subtract(1, 'day').unix()
@@ -231,7 +221,7 @@ describe('getSubscriptionMessage()', () => {
 
         const billingDate = moment().add(8, 'days');
 
-        subscriptionsToReturn = [{
+        supabaseConfig.subscriptionsToReturn = [{
             canceled_at: 123,
             cancel_at: billingDate.unix()
         }]
