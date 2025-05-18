@@ -1,8 +1,13 @@
+// 'use client';
 import MailLink from '@/components/buttons/MailLink';
-import { redirect } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import register from './registerAction';
 
-export default async function RegisterPage() {
+export default async function RegisterPage( { searchParams }: { searchParams: Promise<{error?: string}>}) {
+
+    const _searchParams = await searchParams;
+
+    const { error } = _searchParams;
 
     return (
         <div className='h-full flex flex-col gap-8 items-center justify-center'>
@@ -15,6 +20,7 @@ export default async function RegisterPage() {
                     (8 euros/month after trial ends)
                 </p>
                 <button>Register</button>
+                <span className='text-red-500'>{error}</span>
                 <p className='text-sm'>
                     If you'd like to get a demo before registering, please reach out at
                     <MailLink />

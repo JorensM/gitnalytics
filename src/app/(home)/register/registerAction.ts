@@ -1,8 +1,8 @@
+"use server";
 import { getDBUserByEmail, getUserIDByEmail } from '@/util/auth';
 import { redirect } from 'next/navigation';
 
 export default async function register(formData: FormData) {
-    "use server";
 
     const password = formData.get('password');
     const email = formData.get('email') as string;
@@ -15,7 +15,7 @@ export default async function register(formData: FormData) {
 
     if(userID) {
         redirect('/register?error=Email%20already%20in%20use');
-        return;
+        // return;
     }
 
     redirect('/api/auth/checkout?lookup_key=' + process.env.STRIPE_SUBSCRIPTION_LOOKUP_KEY + '&password=' + password + '&email=' + email);
