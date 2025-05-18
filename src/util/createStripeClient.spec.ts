@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import createStripeClient from './createStripeClient';
+import createStripeClient, { createStripeClientIfNull } from './createStripeClient';
 
 const OLD_ENV = process.env.STRIPE_SECRET_KEY;
 
@@ -21,4 +21,21 @@ describe('createStripeClient()', () => {
         expect(createStripeClient).toThrow();
     })
 
+})
+
+describe('createStripeClientIfNull()', () => {
+    it('Should return a new instance if none is provided', () => {
+        const stripe = createStripeClientIfNull();
+
+        expect(stripe.subscriptions).toBeDefined();
+    })
+
+    it('Should return same instance if provided', () => {
+
+        const stripe = createStripeClient();
+
+        const sameStripe = createStripeClientIfNull(stripe);
+
+        expect(stripe === sameStripe).toBeTruthy();
+    })
 })

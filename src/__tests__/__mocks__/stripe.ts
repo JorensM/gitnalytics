@@ -1,33 +1,48 @@
 // import './common';
 import '@/util/createStripeClient';
+import stripeConfig from './stripeConfig';
 
-type Subscription = { 
-    canceled_at?: number, 
-    ended_at?: number,
-    cancel_at?: number,
-    current_period_end?: number
-}
+export default class Stripe {
 
-const stripeConfig: {
-    subscriptionsToReturn: Subscription[],
-} = {
-    subscriptionsToReturn: []
-}
+    subscriptions;
+    customers;
 
-jest.mock('../../util/createStripeClient', () => () => ({
-    subscriptions: {
-        list: async (params: { customer: string }) => {
-                if(params.customer === 'stripe_customer_id') {
-                    return { data: stripeConfig.subscriptionsToReturn }
+    constructor(secretKey: string) {
+        this.subscriptions = {
+            list: async (params: { customer: string }) => {
+                    if(params.customer === 'stripe_customer_id') {
+                        return { data: stripeConfig.subscriptionsToReturn }
+                    } else {
+                        throw new Error("No such customer: '" + params.customer + "'")
+                    }
+            }
+        }
+
+        this.customers = {
+            del: async (id: string) => {
+                const index = stripeConfig.customers.findIndex(customer => customer.id === id);
+                if(index < 0) {
+                    return {
+                        lastResponse: {
+                            statusCode: 500
+                        }
+                    }
                 } else {
-                    throw new Error("No such customer: '" + params.customer + "'")
+                    stripeConfig.customers.splice(index, 1);
+                    return {
+                        lastResponse: {
+                            statusCode: 200
+                        }
+                    }
                 }
+            }
         }
     }
-}));
+}
+
+jest.mock('stripe');
 
 beforeEach(() => {
     stripeConfig.subscriptionsToReturn = [];
 })
 
-export default stripeConfig;

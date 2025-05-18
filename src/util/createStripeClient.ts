@@ -8,3 +8,10 @@ export default function createStripeClient() {
     }
     return new Stripe(process.env.STRIPE_SECRET_KEY!);
 }
+
+export function createStripeClientIfNull(client?: Stripe | null) {
+    if(!client) {
+        return createStripeClient();
+    }
+    return client;
+}

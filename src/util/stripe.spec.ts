@@ -1,8 +1,9 @@
 import moment from 'moment';
-import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled, getSubscriptionStatus, getSubscriptionStatusMessage } from './stripe';
+import { deleteCustomerByCustomerID, getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled, getSubscriptionStatus, getSubscriptionStatusMessage } from './stripe';
 import supabaseConfig from '@/__tests__/__mocks__/supabase';
-import stripeConfig from '@/__tests__/__mocks__/stripe';
+import stripeConfig from '@/__tests__/__mocks__/stripeConfig';
 import navigation from 'next/navigation';
+import Stripe from 'stripe';
 
 describe('getStripeCustomerID()', () => {
 
@@ -61,7 +62,7 @@ describe('getSubscriptionActive()', () => {
 
     it('If Stripe customer with given customer_id is not found, log user out', async () => {
         supabaseConfig.currentUser = {
-            app_metadata: {
+            user_metadata: {
                 stripe_customer_id: 'customer_not_found'
             }
         };
@@ -242,6 +243,31 @@ describe('getSubscriptionMessage()', () => {
     })
 })
 
-describe('deleteCustomerByID()', () => {
+describe('deleteCustomerByCustomerID()', () => {
+    it('Should delete customer if they exist and return true', async () => {
+        stripeConfig.customers = [{
+            id: '4'
+        }]
+        const stripe = new Stripe('');
 
+        const stripeSpy = jest.spyOn(stripe.customers, 'del');
+
+        const deleted = await deleteCustomerByCustomerID('4', stripe);
+
+        expect(stripeSpy).toHaveBeenCalledWith('4');
+
+        expect(deleted).toBeTruthy();
+    });
+
+    it('Should return false if customer with given ID does not exist', async () => {
+        const stripe = new Stripe('');
+
+        const stripeSpy = jest.spyOn(stripe.customers, 'del');
+
+        const deleted = await deleteCustomerByCustomerID('4', stripe);
+
+        expect(stripeSpy).toHaveBeenCalled();
+
+        expect(deleted).toBeFalsy();
+    })
 })

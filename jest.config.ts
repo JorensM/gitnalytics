@@ -141,7 +141,8 @@ const config: Config = {
   setupFilesAfterEnv: [
     './src/__tests__/__mocks__/supabase.ts',
     './src/__tests__/__mocks__/stripe.ts',
-    './src/__tests__/__mocks__/common.ts'
+    './src/__tests__/__mocks__/common.ts',
+    './src/__tests__/__mocks__/stripeConfig.ts'
   ],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.

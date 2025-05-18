@@ -1,5 +1,5 @@
 import moment from 'moment';
-import createStripeClient from './createStripeClient';
+import createStripeClient, { createStripeClientIfNull } from './createStripeClient';
 import { createClient } from './supabase/server';
 import Stripe from 'stripe';
 import { logout } from './auth';
@@ -13,7 +13,9 @@ export const getStripeCustomerID = async () => {
     if(!user) {
         throw 'No user found';
     }
-    // console.log('user: ', user);
+    if(!user.user_metadata) {
+        console.log('user: ', user);
+    }
     const stripeCustomerID = user?.user_metadata.stripe_customer_id as string;
     return stripeCustomerID;
 }
@@ -31,7 +33,7 @@ export const getSubscriptionActive = async () => {
         })
         subscriptions = data;
     } catch {
-        await logout({ error: 'Stripe customer not found'});
+        await logout({ error: 'Stripe customer ID not found'});
     }
 
     if(subscriptions.length === 0) {
@@ -117,6 +119,12 @@ export async function getSubscriptionStatusMessage(_isActive?: boolean) {
     }
 }
 
-export async function deleteCustomerByID() {
-    
+export async function deleteCustomerByCustomerID(id: string, client?: Stripe) {
+    const stripe = createStripeClientIfNull(client);
+
+    const res = await stripe.customers.del(id);
+
+    console.log('res: ', res);
+
+    return res.lastResponse.statusCode === 200;
 }

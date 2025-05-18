@@ -1,8 +1,10 @@
-import { createClientIfNull, deleteAccount, getCurrentUser, getDBUserByEmail, getUserIDByEmail, logout} from './auth';
-import { SupabaseClient } from '@supabase/supabase-js';
+import { afterDeleteAccount, createClientIfNull, deleteAccount, getCurrentUser, getDBUserByEmail, getUserIDByEmail, logout} from './auth';
+import { SupabaseClient, User } from '@supabase/supabase-js';
 import { createClient } from './supabase/server';
 import navigation from 'next/navigation';
 import supabaseConfig from '@/__tests__/__mocks__/supabase';
+import Stripe from 'stripe';
+import stripeConfig from '@/__tests__/__mocks__/stripeConfig';
 
 // const auth = { logout };
 
@@ -102,10 +104,18 @@ describe('deleteAccount()', () => {
 });
 
 describe('afterDeleteAccount()', () => {
-    it('Should delete Stripe customer', async () => {
+    it('Should delete Stripe customer and return true', async () => {
+        stripeConfig.customers = [{
+            id: 'to_delete'
+        }]
+        const user = {
+            user_metadata: {
+                stripe_customer_id: 'to_delete'
+            }
+        }
+        const deleted = await afterDeleteAccount(user as unknown as User);
 
-
-
-        await afterDeleteAccount(supabaseConfig.currentUser);
+        expect(stripeConfig.customers).toHaveLength(0);
+        expect(deleted).toBeTruthy();
     });
 });

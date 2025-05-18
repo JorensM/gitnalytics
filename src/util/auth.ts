@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from './supabase/server';
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient, User } from '@supabase/supabase-js';
+import { deleteCustomerByCustomerID } from './stripe';
 
 const searchParamsStr = (params?: Record<string, string>) => params ? Object.entries(params)
   .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
@@ -151,4 +152,8 @@ export async function deleteAccount(client: SupabaseClient) {
     await supabase.auth.admin.deleteUser(user.id);
     
     await logout({ message: 'Your account and data associated with it has been deleted'}, supabase);
+}
+
+export async function afterDeleteAccount(dbUser: User) {
+    return await deleteCustomerByCustomerID(dbUser.user_metadata.stripe_customer_id);
 }
