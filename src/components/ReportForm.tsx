@@ -120,7 +120,7 @@ export default function ReportForm( { properties, repositories }: ReportFormProp
                         return;
                     }
                     return (
-                        dataPoint.map((commit: Commit) => commit.commit.message).join('\n')
+                        dataPoint.map((commit: Commit) => commit.message).join('\n')
                     );
                 }
             }
