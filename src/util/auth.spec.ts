@@ -1,6 +1,7 @@
 import { createClientIfNull, getDBUserByEmail, getUserIDByEmail, logout } from './auth';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from './supabase/server';
+import navigation from 'next/navigation';
 
 describe('createClientIfNull()', () => {
     it('Should create and return supabase client if arg is undefined', async () => {
@@ -47,14 +48,15 @@ describe('isLoggedInToGitHub', () => {
 });
 
 describe('logout()', () => {
-    it('Should log user out and return true', async () => {
+    it('Should log user out and redirect to homepage', async () => {
         const supabase = await createClient();
         console.log('supabase', supabase);
         const logoutSpy = jest.spyOn(supabase.auth, 'signOut');
+        const redirectSpy = jest.spyOn(navigation, 'redirect');
 
-        const loggedOut = await logout(supabase);
+        await logout(supabase);
 
         expect(logoutSpy).toHaveBeenCalled();
-        expect(loggedOut).toBeTruthy();
+        expect(redirectSpy).toHaveBeenCalledWith('/');
     })
 })

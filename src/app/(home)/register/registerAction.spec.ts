@@ -1,11 +1,6 @@
 import navigation from 'next/navigation';
 import register from './registerAction';
 
-
-jest.mock('next/navigation', () => ({
-    redirect: (path: string) => {}
-}))
-
 describe('registerAction()', () => {
     it('Should redirect to api/auth/checkout with correct search params', async () => {
         const spy = jest.spyOn(navigation, 'redirect');

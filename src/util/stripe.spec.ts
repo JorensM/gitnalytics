@@ -2,7 +2,6 @@ import moment from 'moment';
 import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled, getSubscriptionStatus, getSubscriptionStatusMessage } from './stripe';
 import supabaseConfig from '@/__tests__/__mocks__/supabase';
 import stripeConfig from '@/__tests__/__mocks__/stripe';
-import navigation from 'next/navigation';
 
 describe('getStripeCustomerID()', () => {
 

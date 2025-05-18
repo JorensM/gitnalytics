@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { createClient } from './supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 
@@ -57,9 +58,7 @@ export async function logout(supabaseClient?: SupabaseClient) {
         throw res.error;
     }
 
-    return true;
-
-    // cons
+    redirect('/');
 }
 
 export async function isLoggedInToGitHub() {
