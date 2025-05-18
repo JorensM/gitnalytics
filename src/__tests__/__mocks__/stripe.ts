@@ -1,3 +1,5 @@
+// import './common';
+import '@/util/createStripeClient';
 
 type Subscription = { 
     canceled_at?: number, 
@@ -15,9 +17,17 @@ const stripeConfig: {
 jest.mock('../../util/createStripeClient', () => () => ({
     subscriptions: {
         list: async (params: { customer: string }) => {
-                return { data: stripeConfig.subscriptionsToReturn }
+                if(params.customer === 'stripe_customer_id') {
+                    return { data: stripeConfig.subscriptionsToReturn }
+                } else {
+                    throw new Error("No such customer: '" + params.customer + "'")
+                }
         }
     }
 }));
+
+beforeEach(() => {
+    stripeConfig.subscriptionsToReturn = [];
+})
 
 export default stripeConfig;

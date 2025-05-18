@@ -1,6 +1,8 @@
 import moment from 'moment';
 import createStripeClient from './createStripeClient';
 import { createClient } from './supabase/server';
+import Stripe from 'stripe';
+import { logout } from './auth';
 
 export const getStripeCustomerID = async () => {
     const supabase = await createClient();
@@ -11,6 +13,7 @@ export const getStripeCustomerID = async () => {
     if(!user) {
         throw 'No user found';
     }
+    // console.log('user: ', user);
     const stripeCustomerID = user?.user_metadata.stripe_customer_id as string;
     return stripeCustomerID;
 }
@@ -20,9 +23,16 @@ export const getSubscriptionActive = async () => {
 
     const stripeCustomerID = await getStripeCustomerID();
 
-    const { data: subscriptions } = await stripe.subscriptions.list({
-        customer: stripeCustomerID
-    })
+    let subscriptions: Stripe.Subscription[] = [];
+
+    try {
+        const { data } = await stripe.subscriptions.list({
+            customer: stripeCustomerID
+        })
+        subscriptions = data;
+    } catch {
+        await logout();
+    }
 
     if(subscriptions.length === 0) {
         return false;

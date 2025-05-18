@@ -2,12 +2,7 @@ import moment from 'moment';
 import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled, getSubscriptionStatus, getSubscriptionStatusMessage } from './stripe';
 import supabaseConfig from '@/__tests__/__mocks__/supabase';
 import stripeConfig from '@/__tests__/__mocks__/stripe';
-
-beforeEach(() => {
-    supabaseConfig.supabaseError = false;
-    supabaseConfig.supabaseNoUser = false;
-    stripeConfig.subscriptionsToReturn = [];
-})
+import navigation from 'next/navigation';
 
 describe('getStripeCustomerID()', () => {
 
@@ -64,8 +59,16 @@ describe('getSubscriptionActive()', () => {
         expect(active).toBeTruthy();
     });
 
-    it('If Stripe customer with given customer_id is not found, log user out', () => {
+    it('If Stripe customer with given customer_id is not found, log user out', async () => {
+        supabaseConfig.currentUser = {
+            app_metadata: {
+                stripe_customer_id: 'customer_not_found'
+            }
+        };
 
+        // const redirectSpy = jest.spyOn()
+
+        // const isActive = await getSubscriptionActive();
     })
 });
 

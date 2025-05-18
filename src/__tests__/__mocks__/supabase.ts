@@ -1,26 +1,27 @@
 import '@/util/supabase/server'
+import { User } from '@supabase/supabase-js';
+
+const defaultUser = {
+    email: 'email@found.com',
+    id: '4',
+    user_metadata: {
+        stripe_customer_id: 'stripe_customer_id'
+    }
+}
+
+const defaultUsers = [defaultUser];
 
 const supabaseConfig: {
-    
     supabaseError: boolean,
     supabaseNoUser: boolean,
-    users: any[]
+    users: any[],
+    currentUser: Partial<User> | null
 } = {
     supabaseError: false,
     supabaseNoUser: false,
-    users: [
-        {
-            email: 'email@found.com',
-            id: 4
-        }
-    ]
+    users: [...defaultUsers],
+    currentUser: {...defaultUser}
 };
-
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve({ test: 100 }),
-  }),
-) as jest.Mock;
 
 const supabaseResponse = (data: any, error?: string) => {
     return {
@@ -47,32 +48,33 @@ jest.mock('../../util/supabase/server', () => ({
                         }
                     }
                 } else {
+                    // console.log('returning user: ', supabaseConfig.currentUser);
                     return {
                         data: {
-                            user: {
-                                user_metadata: {
-                                    stripe_customer_id: 'stripe_customer_id'
-                                }
-                            }
+                            user: supabaseConfig.currentUser
                         }
                     }
                 }
             },
             admin: {
-                getUserById: async (id: number) => {
+                getUserById: async (id: string) => {
                     const user = supabaseConfig.users.find(user => user.id === id);
                     return {
                         data: { user },
                         error: !user ? 'User not found' : undefined
                     }
                 }
+            },
+            signOut: async () => {
+                supabaseConfig.currentUser = null;
+                return {};
             }
         },
         rpc: async (functionName: string, params: Record<string, any>) => {
             if(functionName === 'get_user_id_by_email') {
                 if(params.p_email === 'email@found.com'){
                     return {
-                        data: 4
+                        data: '4'
                     }
                 } else {
                     // todo check if this is actually what the rpc function returns when user is not found
@@ -84,6 +86,13 @@ jest.mock('../../util/supabase/server', () => ({
         }
     })
     
-}))
+}));
+
+beforeEach(() => {
+    supabaseConfig.supabaseError = false;
+    supabaseConfig.supabaseNoUser = false;
+    supabaseConfig.currentUser = {...defaultUser};
+    supabaseConfig.users = [...defaultUsers];
+});
 
 export default supabaseConfig;

@@ -48,7 +48,19 @@ export async function getDBUserByEmail(email: string, supabaseClient?: SupabaseC
     //const { data: { user }, error } = await supabase.auth.getUser();
 }
 
+export async function logout(supabaseClient?: SupabaseClient) {
+    const supabase = await createClientIfNull(supabaseClient);
 
+    const res = await supabase.auth.signOut();
+
+    if(res.error) {
+        throw res.error;
+    }
+
+    return true;
+
+    // cons
+}
 
 export async function isLoggedInToGitHub() {
     const supabase = await createClient();

@@ -1,4 +1,4 @@
-import { createClientIfNull, getDBUserByEmail, getUserIDByEmail } from './auth';
+import { createClientIfNull, getDBUserByEmail, getUserIDByEmail, logout } from './auth';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from './supabase/server';
 
@@ -22,7 +22,7 @@ describe('getUserIDByEmail()', () => {
     it('Should return a user ID if there is a user with given email', async () => {
         const id = await getUserIDByEmail('email@found.com');
 
-        expect(typeof id).toEqual('number');
+        expect(typeof id).toEqual('string');
     })
 })
 
@@ -32,6 +32,7 @@ describe('getDBUserByEmail()', () => {
 
         expect(user).not.toBeNull();
         expect(user?.email).toBeDefined();
+        expect(user?.user_metadata.stripe_customer_id).toBeDefined()
     })
 
     it('Should return null if user with given email was not found', async () => {
@@ -43,4 +44,17 @@ describe('getDBUserByEmail()', () => {
 
 describe('isLoggedInToGitHub', () => {
     it.todo('Should return true if')
+});
+
+describe('logout()', () => {
+    it('Should log user out and return true', async () => {
+        const supabase = await createClient();
+        console.log('supabase', supabase);
+        const logoutSpy = jest.spyOn(supabase.auth, 'signOut');
+
+        const loggedOut = await logout(supabase);
+
+        expect(logoutSpy).toHaveBeenCalled();
+        expect(loggedOut).toBeTruthy();
+    })
 })
