@@ -63,6 +63,13 @@ jest.mock('../../util/supabase/server', () => ({
                         data: { user },
                         error: !user ? 'User not found' : undefined
                     }
+                },
+                deleteUser: async (id: string) => {
+                    const index = supabaseConfig.users.findIndex(user => user.id === id);
+                    supabaseConfig.users.splice(index, 1);
+                    return {
+                        data: null
+                    }
                 }
             },
             signOut: async () => {

@@ -2,6 +2,10 @@ import { redirect } from 'next/navigation';
 import { createClient } from './supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 
+const searchParamsStr = (params?: Record<string, string>) => params ? Object.entries(params)
+  .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+  .join('&') : '';
+
 /**
  * Create a supabase client if arg is not already a supabase client. Otherwise
  * just return the arg
@@ -49,7 +53,7 @@ export async function getDBUserByEmail(email: string, supabaseClient?: SupabaseC
     //const { data: { user }, error } = await supabase.auth.getUser();
 }
 
-export async function logout(supabaseClient?: SupabaseClient) {
+export async function logout(params?: { error?: string, message?: string }, supabaseClient?: SupabaseClient) {
     const supabase = await createClientIfNull(supabaseClient);
 
     const res = await supabase.auth.signOut();
@@ -58,7 +62,16 @@ export async function logout(supabaseClient?: SupabaseClient) {
         throw res.error;
     }
 
-    redirect('/login?error=Stripe%20customer%20ID%20not%20found');
+    const encodedParams: Record<string, string> = {};
+
+    if(params) {
+        for(const [key, value] of Object.entries(params)) {
+            encodedParams[key] = encodeURIComponent(value);
+        }
+    }
+
+
+    redirect('/login?' + searchParamsStr(params));
 }
 
 export async function isLoggedInToGitHub() {
@@ -111,4 +124,31 @@ export async function generateAccessTokenGoogle() {
     }
 
     return data.access_token;
+}
+
+export async function getCurrentUser(client: SupabaseClient) {
+    const supabase = await createClientIfNull(client);
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if(error) {
+        throw error;
+    }
+
+    return user;
+}
+
+export async function deleteAccount(client: SupabaseClient) {
+
+    const supabase = await createClientIfNull(client);
+
+    const user = await getCurrentUser(supabase);
+
+    if(!user) {
+        throw new Error('User not logged in');
+    }
+
+    await supabase.auth.admin.deleteUser(user.id);
+    
+    await logout({ message: 'Your account and data associated with it has been deleted'}, supabase);
 }

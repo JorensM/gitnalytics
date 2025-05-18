@@ -31,7 +31,7 @@ export const getSubscriptionActive = async () => {
         })
         subscriptions = data;
     } catch {
-        await logout();
+        await logout({ error: 'Stripe customer not found'});
     }
 
     if(subscriptions.length === 0) {
@@ -115,4 +115,8 @@ export async function getSubscriptionStatusMessage(_isActive?: boolean) {
         const daysLeft = moment.unix(subscription.cancel_at!).diff(moment(), 'days');
         return daysLeft + ' days until subscription ends';
     }
+}
+
+export async function deleteCustomerByID() {
+    
 }

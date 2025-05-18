@@ -2,6 +2,7 @@ import moment from 'moment';
 import { getStripeCustomerID, getSubscriptionActive, getSubscriptionCancelled, getSubscriptionStatus, getSubscriptionStatusMessage } from './stripe';
 import supabaseConfig from '@/__tests__/__mocks__/supabase';
 import stripeConfig from '@/__tests__/__mocks__/stripe';
+import navigation from 'next/navigation';
 
 describe('getStripeCustomerID()', () => {
 
@@ -65,9 +66,11 @@ describe('getSubscriptionActive()', () => {
             }
         };
 
-        // const redirectSpy = jest.spyOn()
+        const redirectSpy = jest.spyOn(navigation, 'redirect');
 
-        // const isActive = await getSubscriptionActive();
+        const isActive = await getSubscriptionActive();
+
+        expect(redirectSpy).toHaveBeenCalledWith('/login?error=Stripe%20customer%20ID%20not%20found');
     })
 });
 
@@ -237,4 +240,8 @@ describe('getSubscriptionMessage()', () => {
 
         expect(message).toEqual('7 days until subscription ends');
     })
+})
+
+describe('deleteCustomerByID()', () => {
+
 })
