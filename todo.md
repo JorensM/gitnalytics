@@ -1,14 +1,36 @@
 
-* Unit tests and begin TDD
+PH milestone tasks:
+
+* Prevent registration if account already exists 1h
+* Handle error when customer is not found 1h
+* Delete account and data feature 1h
+    * Cancel Stripe subscription when user gets deleted 
+    (listen for delete webhook so that accounts can be properly deleted from Supabase dashboard)
 * Add required Stripe details to website https://support.stripe.com/questions/business-website-for-account-activation-faq
+* Audit site for compliance (GDPR, PCI) 1h
+* Pricing page 1h
+
+1h:
 * Left nav is wrong height after generating report
 * Add loading indicator for platform logout buttons
-* Brainstorm possible integrations (BitBucket, GitLab, Analytics Platforms)
-* Figure out an interface for communication between integrations
 * Hide "Next billing date on" when subscription has been cancelled
+* Missing space on Register page on the demo paragraph
+* Make page titles unique for analytics
+
+* Check website for errors 1h + 0-4h of fixing
+* Unit tests and begin TDD
+
+Total estimate: 7h-11h
+
+PH launch planned for June 1st
+
+Tasks:
+
 
 Unplanned:
 
+* Figure out an interface for communication between integrations
+* Brainstorm possible integrations (BitBucket, GitLab, Analytics Platforms)
 * Change plan logic - webhook to react to plan change
 
 Done:
