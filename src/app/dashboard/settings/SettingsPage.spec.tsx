@@ -48,9 +48,15 @@ describe('<SettingsPage/>', () => {
 
             expect(alertSpy).not.toHaveBeenCalled();
 
-            expect(fetchSpy).toHaveBeenCalledWith(APP_URL + '/api/auth/account', {
-                method: 'DELETE'
-            });
+            expect(supabaseConfig.currentUser).toBeNull();
+            expect(supabaseConfig.users).toHaveLength(0);
+
+            // expect(fetchSpy).toHaveBeenCalledWith(APP_URL + '/api/auth/account', {
+            //     method: 'DELETE',
+            //     headers: {
+            //         'Authorization': 'Bearer ' + supabaseConfig.session.access_token
+            //     }
+            // });
     })
 
     it.skip('Should not do anything but just close prompt if user cancels prompt', async () => {

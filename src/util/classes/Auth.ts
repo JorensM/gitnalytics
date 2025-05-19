@@ -20,4 +20,14 @@ export default class Auth {
     
         return user;
     }
+
+    async getCurrentSession() {
+        console.log('Retrieving current session');
+        const { data: { session }, error } = await this.client.auth.getSession();
+        if(error){
+            console.error(error);
+        }
+
+        return session;
+    }
 }

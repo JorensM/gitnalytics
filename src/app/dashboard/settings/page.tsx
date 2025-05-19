@@ -1,16 +1,16 @@
 import ManageSubscriptionButton from '@/components/buttons/ManageSubscriptionButton';
 import RenewSubscriptionButton from '@/components/buttons/RenewSubscriptionButton';
 import Link from 'next/link';
-import APIDeleteAccount from './APIdeleteAccount';
 import { createClient } from '@/util/supabase/server';
 import DeleteAccountButton from './DeleteButton';
+import deleteAccountAction from './deleteAccountAction';
 
 export default function SettingsPage() {
 
     const deleteAccount = async (formData: FormData) => {
         'use server';
         console.log('formdata: ', formData.get('email'));
-        await APIDeleteAccount(formData.get('email') as string);
+        await deleteAccountAction(formData.get('email') as string);
     }
 
     return (

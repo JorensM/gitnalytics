@@ -1,4 +1,5 @@
 import { APP_URL } from '@/constants/envVars';
+import { deleteAccount } from '@/util/auth';
 import Auth from '@/util/classes/Auth';
 import { createClient } from '@/util/supabase/server';
 
@@ -30,7 +31,7 @@ type APIResponse<T> = SuccessAPIResponse<T> | ErrorAPIResponse
  * 
  * @returns { boolean } true if successfully deleted account, false otherwise
  */
-export default async function APIDeleteAccount(userEmail: string): Promise<APIResponse<undefined>> {
+export default async function deleteAccountAction(userEmail: string): Promise<APIResponse<undefined> | void> {
     // Check if email is correct and return error if not
     const supabase = await createClient();
     const auth = new Auth(supabase);
@@ -39,17 +40,8 @@ export default async function APIDeleteAccount(userEmail: string): Promise<APIRe
     console.log(userEmail, ' - ', user?.email);
 
     if(user?.email === userEmail) {
-        console.log('making request');
-        const res = await fetch(APP_URL + '/api/auth/account', {
-            method: 'DELETE'
-        });
-
-        const data = await res.json();
-
-        return {
-            ...data,
-            status: res.status
-        }
+        console.log('Deleting user account');
+        await deleteAccount();
     } else {
         return {
             data: undefined,

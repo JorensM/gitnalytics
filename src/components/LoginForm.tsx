@@ -19,10 +19,11 @@ export default function Login() {
   const justSubscribed = params.get('subscribed') === 'true';
   const emailConfirmed = params.get('email_confirmed') === 'true';
   const passwordChanged = params.get('password_changed') === 'true';
+  const messageParam = params.get('message');
 
   const [error, setError] = useState<string | null>(params.get('error'));
 
-  const message = useMemo(() => (
+  const message = useMemo(() => messageParam || (
     justSubscribed ? 
       'Subscription successful, please confirm your email'
     : emailConfirmed ? 
@@ -57,7 +58,7 @@ export default function Login() {
 
   return (
     <div className='h-full flex flex-col gap-8 items-center justify-center'>
-      <form onSubmit={login} className='flex flex-col gap-2'>
+      <form onSubmit={login} className='flex flex-col gap-2 max-w-[220px]'>
         <h2>Login</h2>
         {message}
         <input placeholder='Email' name='email' />
