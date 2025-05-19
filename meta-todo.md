@@ -10,6 +10,8 @@ Goals:
 PH Milestone todo:
 
 * ~~Design logo~~
+* Market research/competitive analysis: Before you do anything, take time to understand the environment that you'll be launching into. Do some market research to understand your consumers. Conduct a competitive analysis to understand your competitors. Figure out what's working for them, what isn't, and how they promote themselves.
+* Determine your value proposition/unique selling proposition
 * Create separate email for gitnalytics
 * Complete PH profile
 * Identify people who might support my launch
@@ -22,6 +24,7 @@ PH Milestone todo:
 * Decide on exact time to post (probably in the morning)
 * Prepare for feedback
 * Stripe promo code (yearly discount)
+* Share socials on PH page and profile
 
 Right after launch:
 * Share launch with network and socials

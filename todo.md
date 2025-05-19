@@ -11,6 +11,7 @@ PH milestone tasks:
     (listen for delete webhook so that accounts can be properly deleted from Supabase dashboard)
 * Add required Stripe details to website https://support.stripe.com/questions/business-website-for-account-activation-faq
 * Audit site for compliance (GDPR, PCI) 1h
+* Accounts is not iterable on dashboard
 * Pricing page 1h
 * Select between monthly and yearly subscription 1h
 * Promo code (cannot be done via Stripe Checkout, needs to be done on site because using 1 subscription for both prices) 1h
@@ -27,9 +28,13 @@ PH milestone tasks:
 * Make page titles unique for analytics
 
 * Check website for errors 1h + 0-4h of fixing
+
+* Email list - 2h
+* Check this: https://codepen.io/oxla/pen/awmMYY (Website launch checklist)
+* Stress test (https://loader.io/)
 * Unit tests - remaining time till launch
 
-Total estimate: 12h-16h
+Total estimate: 14h-18h
 
 PH launch planned for June 1st
 
