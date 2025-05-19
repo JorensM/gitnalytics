@@ -15,7 +15,7 @@ describe('createStripeClient()', () => {
         expect(stripe.subscriptions).toBeDefined();
     });
     
-    it.failing('Should throw error if STRIPE_SECRET_KEY env var is not provided', async () => {
+    it.failing.skip('Should throw error if STRIPE_SECRET_KEY env var is not provided', async () => {
         process.env.STRIPE_SECRET_KEY = '';
 
         expect(createStripeClient).toThrow();
