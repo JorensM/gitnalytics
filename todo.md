@@ -12,6 +12,9 @@ PH milestone tasks:
 * Add required Stripe details to website https://support.stripe.com/questions/business-website-for-account-activation-faq
 * Audit site for compliance (GDPR, PCI) 1h
 * Pricing page 1h
+* Select between monthly and yearly subscription 1h
+* Promo code (cannot be done via Stripe Checkout, needs to be done on site because using 1 subscription for both prices) 1h
+1h: 
 * Add logo
 * About page with attribution for logo:
     * Logo by <a href="https://www.vecteezy.com/members/ykadesign">Yazid Kun</a>
@@ -26,7 +29,7 @@ PH milestone tasks:
 * Check website for errors 1h + 0-4h of fixing
 * Unit tests - remaining time till launch
 
-Total estimate: 8h-12h
+Total estimate: 12h-16h
 
 PH launch planned for June 1st
 
