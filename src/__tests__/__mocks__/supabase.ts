@@ -30,70 +30,71 @@ const supabaseResponse = (data: any, error?: string) => {
     }
 }
 
-jest.mock('../../util/supabase/server', () => ({
-    createClient: async () => ({
-        auth: {
-            getUser: () => {
-                if(supabaseConfig.supabaseError) {
-                    return {
-                        data: {
-                            user: null
-                        },
-                        error: 'error'
-                    }
-                } if(supabaseConfig.supabaseNoUser) {
-                    return {
-                        data: {
-                            user: null
-                        }
-                    }
-                } else {
-                    // console.log('returning user: ', supabaseConfig.currentUser);
-                    return {
-                        data: {
-                            user: supabaseConfig.currentUser
-                        }
+const _createClient = async () => ({
+    auth: {
+        getUser: () => {
+            if(supabaseConfig.supabaseError) {
+                return {
+                    data: {
+                        user: null
+                    },
+                    error: 'error'
+                }
+            } if(supabaseConfig.supabaseNoUser) {
+                return {
+                    data: {
+                        user: null
                     }
                 }
-            },
-            admin: {
-                getUserById: async (id: string) => {
-                    const user = supabaseConfig.users.find(user => user.id === id);
-                    return {
-                        data: { user },
-                        error: !user ? 'User not found' : undefined
-                    }
-                },
-                deleteUser: async (id: string) => {
-                    const index = supabaseConfig.users.findIndex(user => user.id === id);
-                    supabaseConfig.users.splice(index, 1);
-                    return {
-                        data: null
+            } else {
+                // console.log('returning user: ', supabaseConfig.currentUser);
+                return {
+                    data: {
+                        user: supabaseConfig.currentUser
                     }
                 }
-            },
-            signOut: async () => {
-                supabaseConfig.currentUser = null;
-                return {};
             }
         },
-        rpc: async (functionName: string, params: Record<string, any>) => {
-            if(functionName === 'get_user_id_by_email') {
-                if(params.p_email === 'email@found.com'){
-                    return {
-                        data: '4'
-                    }
-                } else {
-                    // todo check if this is actually what the rpc function returns when user is not found
-                    return {
-                        data: null
-                    };
+        admin: {
+            getUserById: async (id: string) => {
+                const user = supabaseConfig.users.find(user => user.id === id);
+                return {
+                    data: { user },
+                    error: !user ? 'User not found' : undefined
+                }
+            },
+            deleteUser: async (id: string) => {
+                const index = supabaseConfig.users.findIndex(user => user.id === id);
+                supabaseConfig.users.splice(index, 1);
+                return {
+                    data: null
                 }
             }
+        },
+        signOut: async () => {
+            supabaseConfig.currentUser = null;
+            return {};
         }
-    })
-    
-}));
+    },
+    rpc: async (functionName: string, params: Record<string, any>) => {
+        if(functionName === 'get_user_id_by_email') {
+            if(params.p_email === 'email@found.com'){
+                return {
+                    data: '4'
+                }
+            } else {
+                // todo check if this is actually what the rpc function returns when user is not found
+                return {
+                    data: null
+                };
+            }
+        }
+    }
+})
+
+jest.mock('../../util/supabase/server', () => ({ createClient: () => _createClient() }));
+
+jest.mock('../../util/supabase/client', () => ({ createClient: () => _createClient() }))
 
 beforeEach(() => {
     supabaseConfig.supabaseError = false;
