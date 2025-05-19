@@ -5,7 +5,7 @@ import createStripeClient from '@/util/createStripeClient';
 import { createClient } from '@/util/supabase/server';
 import { getSubscriptionActive } from '@/util/stripe';
 import MailLink from '@/components/buttons/MailLink';
-import { LayoutProps } from '../../../.next/types/app/layout';
+import { LayoutProps } from '../../../.next/types/app/dashboard/layout';
 
 export default async function DashboardLayout(props: LayoutProps) {
 
