@@ -7,6 +7,7 @@ PH milestone tasks:
 * ~~Prevent registration if account already exists 1h~~ actual: 1.5h
 * ~~Handle error when customer is not found 1h~~ actual: 46min
 * Delete account and data feature 1h
+    * ~~Delete user from database~~
     * Cancel Stripe subscription when user gets deleted 
     (listen for delete webhook so that accounts can be properly deleted from Supabase dashboard)
 * Add required Stripe details to website https://support.stripe.com/questions/business-website-for-account-activation-faq
