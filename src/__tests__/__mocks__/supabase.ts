@@ -1,5 +1,5 @@
 import '@/util/supabase/server'
-import { User } from '@supabase/supabase-js';
+import { Session, User } from '@supabase/supabase-js';
 
 const defaultUser = {
     email: 'email@found.com',
@@ -15,12 +15,16 @@ const supabaseConfig: {
     supabaseError: boolean,
     supabaseNoUser: boolean,
     users: any[],
-    currentUser: Partial<User> | null
+    currentUser: Partial<User> | null,
+    session: Partial<Session>
 } = {
     supabaseError: false,
     supabaseNoUser: false,
     users: [...defaultUsers],
-    currentUser: {...defaultUser}
+    currentUser: {...defaultUser},
+    session: {
+        access_token: '123'
+    }
 };
 
 const supabaseResponse = (data: any, error?: string) => {
@@ -32,7 +36,7 @@ const supabaseResponse = (data: any, error?: string) => {
 
 const _createClient = async () => ({
     auth: {
-        getUser: () => {
+        getUser: async () => {
             if(supabaseConfig.supabaseError) {
                 return {
                     data: {
@@ -52,6 +56,13 @@ const _createClient = async () => ({
                     data: {
                         user: supabaseConfig.currentUser
                     }
+                }
+            }
+        },
+        getSession: async () => {
+            return {
+                data: { 
+                    session: supabaseConfig.session
                 }
             }
         },
