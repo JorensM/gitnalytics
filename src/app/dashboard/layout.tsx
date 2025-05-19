@@ -1,13 +1,11 @@
 import GoogleSignIn from '@/components/buttons/GoogleSignIn';
 import GitHubSignIn from '@/components/buttons/GitHubSignIn';
 import Link from 'next/link';
-import createStripeClient from '@/util/createStripeClient';
-import { createClient } from '@/util/supabase/server';
 import { getSubscriptionActive } from '@/util/stripe';
 import MailLink from '@/components/buttons/MailLink';
-import { LayoutProps } from '../../../.next/types/app/dashboard/layout';
+import { PropsWithChildren } from 'react';
 
-export default async function DashboardLayout(props: LayoutProps) {
+export default async function DashboardLayout(props: PropsWithChildren) {
 
     const isSubscriptionActive = await getSubscriptionActive();
 
