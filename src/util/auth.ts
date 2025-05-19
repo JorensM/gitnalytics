@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from './supabase/server';
 import { SupabaseClient, User } from '@supabase/supabase-js';
 import { deleteCustomerByCustomerID } from './stripe';
+import moment from 'moment';
 
 const searchParamsStr = (params?: Record<string, string>) => params ? Object.entries(params)
   .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
@@ -91,12 +92,23 @@ export async function isLoggedInToGoogle() {
     return !!user.data.user?.user_metadata.googleRefreshToken;
 }
 
+const isTokenExpired = (tokenExpirationDate?: string) => {
+    return tokenExpirationDate ? moment(tokenExpirationDate).isBefore(moment()) : false;
+}
+
 export async function generateAccessTokenGoogle() {
+    console.log('generating google access token');
     const supabase = await createClient();
 
     const user = await supabase.auth.getUser();
 
     const refreshToken = user.data.user?.user_metadata.googleRefreshToken;
+    const expirationDate = user.data.user?.user_metadata.googleAccessTokenExpiresAt;
+
+    if(!isTokenExpired(expirationDate)) {
+        console.log('token not expired, reusing');
+        return user.data.user?.user_metadata.googleAccessToken;
+    }
 
     const res = await fetch('https://www.googleapis.com/oauth2/v4/token', {
         method: 'POST',
@@ -114,9 +126,12 @@ export async function generateAccessTokenGoogle() {
 
     const data = await res.json();
 
+    console.log(data);
+
     const resSupabase = await supabase.auth.updateUser({
         data: {
-            googleAccessToken: data.access_token
+            googleAccessToken: data.access_token,
+            googleAccessTokenExpiresAt: moment().add(data.expires_in, 'seconds').toISOString()
         }
     });
 
@@ -127,7 +142,7 @@ export async function generateAccessTokenGoogle() {
     return data.access_token;
 }
 
-export async function getCurrentUser(client: SupabaseClient) {
+export async function getCurrentUser(client?: SupabaseClient) {
     const supabase = await createClientIfNull(client);
 
     const { data: { user }, error } = await supabase.auth.getUser();

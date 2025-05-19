@@ -1,3 +1,4 @@
+'use server';
 import { getStripeCustomerID, getSubscriptionActive, getSubscriptionStatus, getSubscriptionStatusMessage } from '@/util/stripe'
 import clsx from 'clsx';
 import Link from 'next/link';

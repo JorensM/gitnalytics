@@ -31,13 +31,13 @@ export default async function DashboardPage() {
 
     const showReportForm = await isLoggedInToGitHub() && await isLoggedInToGoogle();
 
-    const fetchProperties = async () => {
+    const fetchProperties = async (_token?: string) => {
         console.log('fetching properties');
         const supabase = await createClient();
 
         const { data: { user } } = await supabase.auth.getUser();
 
-        const token = user?.user_metadata.googleAccessToken;
+        const token = _token || user?.user_metadata.googleAccessToken;
 
         const accountsRes = await fetch('https://analyticsadmin.googleapis.com/v1beta/accounts', {   
             headers: {
@@ -45,6 +45,8 @@ export default async function DashboardPage() {
                 'Authorization': 'Bearer ' + token
             }
         })
+
+        // console.log(accountsRes)
 
         const accounts = (await accountsRes.json()).accounts;
 
@@ -117,7 +119,8 @@ export default async function DashboardPage() {
     const githubSignedIn = await isLoggedInToGitHub();
     
     if(googleSignedIn) {
-        await generateAccessTokenGoogle();
+        const token = await generateAccessTokenGoogle();
+        console.log('token defined: ', typeof token === 'string');
         properties = await fetchProperties();
     }
 
