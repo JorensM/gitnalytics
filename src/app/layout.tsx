@@ -40,7 +40,7 @@ export default async function RootLayout({
 
   const subscriptionStatus = loggedIn ? await getSubscriptionStatus() : undefined;
 
-  const collectData = (await cookies()).get('disable-stats')?.value !== 'true';
+  const collectData = false;//(await cookies()).get('disable-stats')?.value !== 'true';
 
   return (
     <html lang="en">
