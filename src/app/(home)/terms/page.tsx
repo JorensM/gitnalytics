@@ -6,13 +6,15 @@ import OptOutAlert from './OptOutAlert';
 
 export default async function TermsPage() {
 
-    const _cookies = await cookies();
+    // const _cookies = await cookies();
 
-    const optedOut = _cookies.get('disable-stats')?.value === 'true';
+    // const optedOut = _cookies.get('disable-stats')?.value === 'true';
 
     return (
         <div className='p-8 max-w-[800px] flex flex-col gap-2'>
-            <OptOutAlert />
+            <h2 className='text-xl font-bold'>Privacy Policy</h2>
+                No analytical data gets collected on this website.
+            {/* <OptOutAlert />
             <h2 className='text-xl font-bold'>Privacy Policy</h2>
             <h3 className='text-lg font-semibold'>User data</h3>
             <p>
@@ -43,7 +45,7 @@ export default async function TermsPage() {
                 >
                     {!optedOut ? 'Opt out': 'Opt in'}
                 </button>
-            </form>
+            </form> */}
         </div>
     )
 }
