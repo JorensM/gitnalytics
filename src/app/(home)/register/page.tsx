@@ -38,16 +38,15 @@ export default async function RegisterPage() {
         <div className='h-full flex flex-col gap-8 items-center justify-center'>
             <form action={register} className='flex flex-col gap-2 max-w-[240px]'>
                 <h2>Register</h2>
-                <input type='email' placeholder='Email' name='email' required/>
-                <input type='password' placeholder='Password' name='password' minLength={5} maxLength={32} required/>
+                {/* <input type='email' placeholder='Email' name='email' required/> */}
+                {/* <input type='password' placeholder='Password' name='password' minLength={5} maxLength={32} required/> */}
                 <p className='w-full text-sm'>
-                    After clicking 'Register', you will be taken to a Stripe Checkout page, and your 14 day trial will start.
-                    (8 euros/month after trial ends)
+                    Currently, Gitnalytics is in closed beta.
                 </p>
-                <button>Register</button>
+                {/* <button>Register</button> */}
                 <p className='text-sm'>
-                    If you'd like to get a demo before registering, please reach out at
-                    <MailLink />
+                    If you'd like to get a demo or get involved in testing, please
+                    reach out to me at <MailLink />
                 </p>
             </form>
         </div>
