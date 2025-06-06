@@ -3,13 +3,13 @@ import GitHubSignIn from '@/components/buttons/GitHubSignIn';
 import Link from 'next/link';
 import createStripeClient from '@/util/createStripeClient';
 import { createClient } from '@/util/supabase/server';
-import { getSubscriptionActive } from '@/util/stripe';
+// import { getSubscriptionActive } from '@/util/stripe';
 import MailLink from '@/components/buttons/MailLink';
 import { LayoutProps } from '../../../.next/types/app/layout';
 
 export default async function DashboardLayout(props: LayoutProps) {
 
-    const isSubscriptionActive = await getSubscriptionActive();
+    const isSubscriptionActive = true;//await getSubscriptionActive();
 
     return (
         <div className='flex h-full'>
