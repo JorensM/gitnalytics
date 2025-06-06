@@ -79,8 +79,8 @@ export async function getSubscriptionStatus() {
     return {
         isActive,
         isCancelled,
-        daysLeft,
-        nextBillingDate,
+        daysLeft: 15,
+        nextBillingDate: 15,
         ended: false//isCancelled && (!daysLeft || daysLeft < 1)
     }
 }
