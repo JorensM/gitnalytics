@@ -1,6 +1,6 @@
 import moment from 'moment';
-import createStripeClient from './createStripeClient';
-import { createClient } from './supabase/server';
+// import createStripeClient from './createStripeClient';
+// import { createClient } from './supabase/server';
 
 export const getStripeCustomerID = async () => {
     // const supabase = await createClient();
@@ -65,15 +65,15 @@ export async function getSubscriptionStatus() {
 
     // console.log(subscriptions);
 
-    const subscription = subscriptions[0];
+    // const subscription = subscriptions[0];
 
-    let nextBillingDate;
+    // let nextBillingDate;
 
-    if(isCancelled && subscriptions.length) {
-        daysLeft = moment.unix(subscription.cancel_at!).diff(moment(), 'days');
-    } else if(subscriptions.length) {
-        nextBillingDate = moment.unix(subscription.current_period_end).format('YYYY-MM-DD');
-    }
+    // if(isCancelled && subscriptions.length) {
+    //     daysLeft = moment.unix(subscription.cancel_at!).diff(moment(), 'days');
+    // } else if(subscriptions.length) {
+    //     nextBillingDate = moment.unix(subscription.current_period_end).format('YYYY-MM-DD');
+    // }
 
 
     return {
@@ -81,7 +81,7 @@ export async function getSubscriptionStatus() {
         isCancelled,
         daysLeft,
         nextBillingDate,
-        ended: isCancelled && (!daysLeft || daysLeft < 1)
+        ended: false//isCancelled && (!daysLeft || daysLeft < 1)
     }
 }
 
