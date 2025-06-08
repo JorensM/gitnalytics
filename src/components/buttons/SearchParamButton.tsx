@@ -12,7 +12,7 @@ export default function SearchParamButton(props: SearchParamButtonProps) {
 
     // const paramKey = Object.keys(props.params)[0];
 
-    // const label = params.get(paramKey) ? props.params[paramKey] : props.default;
+    const label = props.default;//params.get(paramKey) ? props.params[paramKey] : props.default;
 
     return <button>{label}</button>;
 }
