@@ -40,7 +40,7 @@ export default async function RootLayout({
 
   const subscriptionStatus = loggedIn ? await getSubscriptionStatus() : undefined;
 
-  const collectData = false;//(await cookies()).get('disable-stats')?.value !== 'true';
+  const collectData = true;//(await cookies()).get('disable-stats')?.value !== 'true';
 
   return (
     <html lang="en">
@@ -59,7 +59,7 @@ export default async function RootLayout({
               
               gtag('js', new Date());
 
-              gtag('config', 'G-GXM4YEPGPR', { 'cookie_flags': 'SameSite=None; Secure' });`}
+              gtag('config', 'G-GXM4YEPGPR', { 'storage': 'none' });`}
             </Script>
           </>
         : null}
