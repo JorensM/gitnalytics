@@ -58,6 +58,8 @@ export default async function RootLayout({
               function gtag(){dataLayer.push(arguments);}
               
               gtag('js', new Date());
+
+              gtag('config', 'G-GXM4YEPGPR');
               `}
             </Script>
           </>
