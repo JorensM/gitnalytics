@@ -50,6 +50,7 @@ export default async function RootLayout({
         {/* Google Tag (Google Analytics) */}
         {collectData ? 
           <>
+            <script type="text/javascript" charset="UTF-8" src="//cdn.cookie-script.com/s/bea199f119b82cafa20ec2040bfaccf5.js"></script>
             <script async src="https://www.googletagmanager.com/gtag/js?id=G-GXM4YEPGPR"></script>
             <Script
               id='g-tag'
