@@ -13,7 +13,9 @@ export default async function TermsPage() {
     return (
         <div className='p-8 max-w-[800px] flex flex-col gap-2'>
             <h2 className='text-xl font-bold'>Privacy Policy</h2>
-                No analytical data gets collected on this website.
+                No personal analytical data gets collected on this website.
+                Some basic anonymous information gets collected that does not
+                use any cookies, such as website visits.
             {/* <OptOutAlert />
             <h2 className='text-xl font-bold'>Privacy Policy</h2>
             <h3 className='text-lg font-semibold'>User data</h3>
