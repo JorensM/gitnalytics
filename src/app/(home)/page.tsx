@@ -16,7 +16,7 @@ export default async function Home() {
       <h2 className='text-2xl'>Track your visitor analytics alongside your Git commit history</h2>
       <img src='gitnalytics_2.PNG' className='w-full'/>
       <p>
-        Gitnalytics allows you to map your Git commit history to your analytics
+        Gitnalytics allows you to map/compare your Git commit history to your user analytics
         to help you better understand which updates to your code leave the most
         impact.
       </p>
@@ -25,6 +25,11 @@ export default async function Home() {
         platforms will be integrated eventually. If you have a feature request,
         feel free to reach out at <MailLink/>
       </p>
+      <ul>
+        <li>See how your code changes impact your visitors.</li>
+        <li>Correlate Git commits with visitor traffic to measure real impact.</li>
+        <li>Link your GitHub commits with Google Analytics to understand which changes matter.</li>
+      </ul>
     </div>
   );
 }
