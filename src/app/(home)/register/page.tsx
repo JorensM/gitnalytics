@@ -37,17 +37,18 @@ export default async function RegisterPage() {
     return (
         <div className='h-full flex flex-col gap-8 items-center justify-center'>
             <form action={register} className='flex flex-col gap-2 max-w-[240px]'>
-                <h2>Register</h2>
-                {/* <input type='email' placeholder='Email' name='email' required/> */}
-                {/* <input type='password' placeholder='Password' name='password' minLength={5} maxLength={32} required/> */}
-                <p className='w-full text-sm'>
+                <h2>Sign Up</h2>
+                <input type='email' placeholder='Email' name='email' required/>
+                <input type='password' placeholder='Password' name='password' minLength={5} maxLength={32} required/>
+                <button>Sign Up</button>
+                {/* <p className='w-full text-sm'>
                     Currently, Gitnalytics is in closed beta.
-                </p>
+                </p> */}
                 {/* <button>Register</button> */}
-                <p className='text-sm'>
+                {/* <p className='text-sm'>
                     If you'd like to get a demo or get involved in testing, please
                     reach out to me at <MailLink />
-                </p>
+                </p> */}
             </form>
         </div>
     );
