@@ -22,7 +22,7 @@ export default function AuthButtons() {
                 : null}
                 {showRegisterButton ? 
                     <Link href='/register' className='button-secondary-outline'>
-                        Register
+                        Sign up
                     </Link>
                 : null}
             </div>
