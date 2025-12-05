@@ -5,6 +5,9 @@ export async function middleware(request: NextRequest) {
   return await updateSession(request)
 }
 
+/**
+  Middleware configuration
+*/
 export const config = {
   matcher: [
     /*
