@@ -13,7 +13,7 @@ export default async function Home() {
 
   return (
     <div className='flex flex-col p-8 max-w-[1000px] gap-4'>
-      <h2 className='text-2xl'>Track your visitor analytics alongside your Git commit history</h2>
+      <h2 className='text-2xl'>Measure the impact of your product updates</h2>
       <img src='gitnalytics_2.PNG' className='w-full'/>
       <p>
         Gitnalytics allows you to map/compare your Git commit history to your user analytics
