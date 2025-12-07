@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gitnalytics",
+  title: "Gitnalytics - Measure the impact of your product updates",
   description: "Analytics for your commits",
 };
 
