@@ -13,11 +13,11 @@ export default async function Home() {
 
   return (
     <div className='flex flex-col p-8 max-w-[1000px] gap-4'>
-      <h2 className='text-2xl'>Measure the impact of your product updates</h2>
+      <h2 className='text-2xl'>See how your code changes impact your visitors.</h2>
       <img src='gitnalytics_2.PNG' className='w-full'/>
       <ul className='my-2 list-disc'>
-        <li>See how your code changes impact your visitors.</li>
         <li>Correlate Git commits with visitor traffic to measure real impact.</li>
+        <li>Track your visitor analytics alongside your Git commit history.</li>
         <li>Link your GitHub commits with Google Analytics to understand which changes matter.</li>
       </ul>
       <p>
