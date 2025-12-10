@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
+import Head from 'next/head';
 
 
 export default async function Home() {
@@ -13,6 +14,9 @@ export default async function Home() {
 
   return (
     <div className='flex flex-col p-8 max-w-[1000px] gap-4'>
+      <Head>
+        <link rel="canonical" href="https://gitnalytics.com" />
+      </Head>
       <h2 className='text-2xl'>See how your code changes impact your visitors.</h2>
       <img src='gitnalytics_2.PNG' className='w-full'/>
       <ul className='my-2 list-disc list-inside'>
