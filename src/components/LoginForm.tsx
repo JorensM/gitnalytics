@@ -1,17 +1,15 @@
 'use client'
 
-import { SupabaseClient } from '@supabase/supabase-js';
-import { createClient } from '@/util/supabase/client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
-import useSupabase from '@/hooks/useSupabase';
 import { revalidatePath } from 'next/cache';
+import useDB from '@/hooks/useDB';
 
 
 
 export default function Login() {
   
-  const supabase = useSupabase();
+  const db = useDB();
   const navigate = useRouter();
 
   const params = useSearchParams();
@@ -35,24 +33,19 @@ export default function Login() {
   async function login(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
-    if(!supabase.current) {
-        throw new Error('Supabase not initialized');
-    }
     const formData = new FormData(e.currentTarget);
-    // console.log(formData.get('email'));
-    const res = await supabase.current.auth.signInWithPassword({
-      email: formData.get('email') as string,
-      password: formData.get('password') as string
-    })
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
-    if(res.error) {
-      setError(res.error.message)
-      //throw res.error;
+    try {
+      await db.signIn(email, password);
+
+      navigate.refresh();
+      revalidatePath('/login', 'layout');
+      navigate.push('/dashboard');
+    } catch (e: any) {
+      setError(e.message)
     }
-
-    navigate.refresh();
-    revalidatePath('/login', 'layout');
-    navigate.push('/dashboard');
   }
 
   return (
