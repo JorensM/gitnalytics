@@ -1,3 +1,4 @@
+import database from '@/classes/serverDB';
 import { APP_URL } from '@/constants/envVars';
 import { createClient } from '@/util/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
@@ -26,36 +27,25 @@ export async function POST(request: NextRequest) {
         return new NextResponse();
     }
 
-    const supabase = await createClient();
+    try {
+        const user = await database.signUp(metadata.email, metadata.password, customer);
 
-    const { data: { user } , error } = await supabase.auth.signUp({
-        email: metadata.email,
-        password: metadata.password,
-        options: {
-            data: {
-                stripe_customer_id: customer
-            },
-            emailRedirectTo: APP_URL + '/login?email_confirmed=true'
+        if(!user) {
+            throw new Error('User not found')
         }
-    })
 
-    if(error) {
-        throw new Error('Error creating an account: ' + error.message);
-    }
+        const stripeRes = await stripe.customers.update(customer, {
+            metadata: {
+                gitnalytics_user_id: user.id
+            }
+        })
 
-    if(!user) {
-        throw new Error('User not found')
-    }
-
-    const stripeRes = await stripe.customers.update(customer, {
-        metadata: {
-            gitnalytics_user_id: user.id
+        if(stripeRes.lastResponse.statusCode !== 200) {
+            throw new Error('Could not update Stripe customer');
         }
-    })
 
-    if(stripeRes.lastResponse.statusCode !== 200) {
-        throw new Error('Could not update Stripe customer');
+        return new NextResponse();
+    } catch (e: any) {
+        throw new Error('Error creating an account: ' + e.message);
     }
-
-    return new NextResponse();
 }
