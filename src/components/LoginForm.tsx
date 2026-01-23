@@ -41,7 +41,7 @@ export default function Login() {
       await db.signIn(email, password);
 
       navigate.refresh();
-      revalidatePath('/login', 'layout');
+      // revalidatePath('/login', 'layout');
       navigate.push('/dashboard');
     } catch (e: any) {
       setError(e.message)

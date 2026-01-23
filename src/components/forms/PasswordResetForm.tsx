@@ -1,4 +1,5 @@
 'use client';
+import useDB from '@/hooks/useDB';
 import { createClient } from '@/util/supabase/client';
 import Image from "next/image";
 import Link from 'next/link';
@@ -9,13 +10,13 @@ import Stripe from 'stripe';
 export default function PasswordResetForm() {
     
     const [error, setError] = useState<null | string>(null);
+    const db = useDB();
 
     async function changePassword(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setError(null);
         try {
             const formData = new FormData(e.currentTarget);
-            const supabase = await createClient();
             const data = {
                 password: formData.get('password') as string,
                 password_confirm: formData.get('password_confirm') as string
@@ -30,15 +31,16 @@ export default function PasswordResetForm() {
                 throw new Error('Passwords do not match');
             }
     
-            const res = await supabase.auth.updateUser({
-                password: data.password
-            })
-    
-            if(res.error) {
-                throw res.error
+            try {
+                await db.updateUser({
+                    password: data.password
+                })
+
+            } catch (e: any) {
+                throw e;
             }
     
-            await supabase.auth.signOut();
+            await db.signOut();
         } catch (_e) {
             const e = _e as Error;
             setError(e.message);

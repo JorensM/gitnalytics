@@ -1,4 +1,4 @@
-import AbstractDatabase from "@/classes/AbstractDatabase";
+import AbstractDatabase, { UserAttributes } from "@/classes/AbstractDatabase";
 // import database from "@/classes/browserDB";
 import Supabase from "@/classes/AbstractSupabase";
 import { createClient } from "@/util/supabase/client";
@@ -19,6 +19,8 @@ export default function useDB(client = database) {
     }, []);
 
     return {
-        signIn: (email: string, password: string) => client.signIn(email, password)
+        signIn: (email: string, password: string) => client.signIn(email, password),
+        signOut: () => client.signOut(),
+        updateUser: (attributes: UserAttributes) => client.updateUser(attributes)
     }
 }

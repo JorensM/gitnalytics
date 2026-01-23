@@ -40,4 +40,20 @@ export default abstract class AbstractSupabase extends AbstractDatabase {
 
         return true;
     }
+
+    async updateUser(attributes: { password: string; }): Promise<boolean> {
+        const res = await this.client?.auth.updateUser(attributes);
+        if(res?.error) {
+            throw res.error;
+        }
+        return true;
+    }
+
+    async signOut(): Promise<boolean> {
+        const res = await this.client?.auth.signOut();
+        if(res?.error) {
+            throw res.error;
+        }
+        return true;
+    }
 };
