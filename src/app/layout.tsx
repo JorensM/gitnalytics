@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./style.css";
 import SignOutButton from '@/components/buttons/SignOutButton';
-import { createClient } from '@/util/supabase/server';
+// import { createClient } from '@/util/supabase/server';
 import AuthButtons from '@/components/layout/header/AuthButtons';
 import DashboardLink from '@/components/layout/header/DashboardLink';
 import Link from 'next/link';
@@ -10,6 +10,7 @@ import { getSubscriptionStatus, getSubscriptionStatusMessage } from '@/util/stri
 import Script from 'next/script';
 import MailLink from '@/components/buttons/MailLink';
 import { cookies } from 'next/headers';
+import database from "@/classes/serverDB";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +33,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const supabase = await createClient();
+  // const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await database.getUser();
 
   const loggedIn = !!user;
 

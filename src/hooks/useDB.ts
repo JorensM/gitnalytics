@@ -19,8 +19,9 @@ export default function useDB(client = database) {
     }, []);
 
     return {
-        signIn: (email: string, password: string) => client.signIn(email, password),
-        signOut: () => client.signOut(),
-        updateUser: (attributes: UserAttributes) => client.updateUser(attributes)
+        signIn: async (email: string, password: string) => await client.signIn(email, password),
+        signOut: async () => await client.signOut(),
+        updateUser: async (attributes: UserAttributes) => await client.updateUser(attributes),
+        getUser: async () => await client.getUser()
     }
 }

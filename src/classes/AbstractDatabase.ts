@@ -1,8 +1,18 @@
-import { User } from '@supabase/auth-js';
+import { User as SupabaseUser} from '@supabase/auth-js';
 
+export type UserData = {
+    githubAccessToken: string,
+    googleRefreshToken: string,
+    googleAccessToken: string
+}
 
 export type UserAttributes = {
-    password: string
+    password: string,
+    data: Partial<UserData>
+}
+
+export type User = SupabaseUser & {
+    // data: Partial<UserData>
 }
 
 export default abstract class AbstractDatabase {
@@ -13,7 +23,7 @@ export default abstract class AbstractDatabase {
     abstract signIn(email: string, password: string): Promise<boolean>;
     abstract signOut(): Promise<boolean>;
     abstract getUser(): Promise<User | null>;
-    abstract updateUser(attributes: UserAttributes): Promise<boolean>;
+    abstract updateUser(attributes: Partial<UserAttributes>): Promise<boolean>;
 
 
 }

@@ -1,10 +1,10 @@
 // 3rd party
-import { SupabaseClient, User } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 // Utils
 // import { createClient as createServerClient } from "@/util/supabase/server";
 // import { createClient as createBrowserClient } from "@/util/supabase/client";
-import AbstractDatabase from "./AbstractDatabase";
+import AbstractDatabase, { UserAttributes, User } from "./AbstractDatabase";
 import { APP_URL } from "@/constants/envVars";
 
 export default abstract class AbstractSupabase extends AbstractDatabase {
@@ -69,7 +69,7 @@ export default abstract class AbstractSupabase extends AbstractDatabase {
         return true;
     }
 
-    async updateUser(attributes: { password: string; }): Promise<boolean> {
+    async updateUser(attributes: Partial<UserAttributes>): Promise<boolean> {
         const res = await this.client?.auth.updateUser(attributes);
         if(res?.error) {
             throw res.error;

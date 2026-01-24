@@ -2,12 +2,15 @@ import GitHubSignIn from '@/components/buttons/GitHubSignIn';
 import GoogleSignIn from '@/components/buttons/GoogleSignIn';
 import ReportForm, { GaProperties } from '@/components/ReportForm';
 import { GitHubRepository } from '@/components/selects/GitHubRepositorySelect';
+import useDB from '@/hooks/useDB';
 import { generateAccessTokenGoogle, isLoggedInToGitHub, isLoggedInToGoogle } from '@/util/auth';
 import createStripeClient from '@/util/createStripeClient';
 import { getSubscriptionActive } from '@/util/stripe';
-import { createClient } from '@/util/supabase/server';
+// import { createClient } from '@/util/supabase/server';
 import moment from 'moment';
 import Link from 'next/link';
+import database from '@/classes/serverDB';
+import { User } from '@/classes/AbstractDatabase';
 
 
 
@@ -30,12 +33,12 @@ function parseRelHeader(data: string) {
 export default async function DashboardPage() {
 
     const showReportForm = await isLoggedInToGitHub() && await isLoggedInToGoogle();
+    // const db = useDB();
 
     const fetchProperties = async () => {
         console.log('fetching properties');
-        const supabase = await createClient();
 
-        const { data: { user } } = await supabase.auth.getUser();
+        const user = await database.getUser();
 
         const token = user?.user_metadata.googleAccessToken;
 
@@ -71,10 +74,10 @@ export default async function DashboardPage() {
     }
 
     const fetchGithubRepositories = async () => {
-            const supabase = await createClient();
-            const { data: { user }, error } = await supabase.auth.getUser();
-    
-            if(error) {
+            let user: User;
+            try {
+                user = (await database.getUser())!;
+            } catch (error) {
                 throw error;
             }
     

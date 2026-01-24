@@ -2,6 +2,7 @@ import { generateAccessTokenGoogle } from '@/util/auth';
 import { createClient } from '@/util/supabase/server';
 import moment from 'moment';
 import { NextRequest, NextResponse } from 'next/server';
+import database from '@/classes/serverDB';
 
 export type Commit = {
     commit: {
@@ -43,16 +44,14 @@ const generateReport = (gaRows: any[], ghRows: Commit[][], startDate: string, en
 }
 
 export async function GET(req: NextRequest) {
-    const supabase = await createClient();
-    
     await generateAccessTokenGoogle();
 
-    const user = await supabase.auth.getUser();
+    const user = (await database.getUser())!;
     
     const data = {
         repo: req.nextUrl.searchParams.get('repo'),
-        gitToken: user.data.user?.user_metadata.githubAccessToken,
-        gaToken: user.data.user?.user_metadata.googleAccessToken,
+        gitToken: user.user_metadata.githubAccessToken,
+        gaToken: user.user_metadata.googleAccessToken,
         dateFrom: req.nextUrl.searchParams.get('dateFrom') as string,
         dateTo: req.nextUrl.searchParams.get('dateTo') as string,
         metric: req.nextUrl.searchParams.get('metric') as string

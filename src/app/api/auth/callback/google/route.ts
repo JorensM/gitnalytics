@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { OAuth2Client } from 'google-auth-library';
 import { redirect } from 'next/navigation';
-import { createClient } from '@/util/supabase/server';
-import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
 import { APP_URL } from '@/constants/envVars';
+import database from '@/classes/serverDB';
 
 
 export async function GET(req: NextRequest) {
-    const supabaseClient = await createClient();
     const redirectUri = APP_URL + '/api/auth/callback/google';
 
     const client = new OAuth2Client({
@@ -25,15 +23,15 @@ export async function GET(req: NextRequest) {
 
     // console.log(r.tokens);
 
-    const res = await supabaseClient.auth.updateUser({
-        data: {
-            googleRefreshToken: r.tokens.refresh_token,
-            googleAccessToken: r.tokens.access_token
-        }
-    })
-
-    if(res.error) {
-        throw res.error;
+    try {
+        await database.updateUser({
+            data: {
+                googleRefreshToken: r.tokens.refresh_token || undefined,
+                googleAccessToken: r.tokens.access_token || undefined
+            }
+        })
+    } catch (error) {
+        throw error;
     }
 
     redirect('/dashboard');
