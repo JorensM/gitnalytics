@@ -1,13 +1,20 @@
 import { APP_URL } from '@/constants/envVars';
-import { createClient } from '@/util/supabase/server';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import database from '@/classes/serverDB';
+import { User } from '@supabase/auth-js';
 
 export async function GET() {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-    const supabase = await createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    let user: User | null;
+
+    try {
+        user = await database.getUser();
+    } catch (e) {
+        throw e;
+    }
+
 
     if(!user) {
         throw new Error('User not authenticated');

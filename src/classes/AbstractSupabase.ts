@@ -61,6 +61,14 @@ export default abstract class AbstractSupabase extends AbstractDatabase {
         return true;
     }
 
+    async signOut(): Promise<boolean> {
+        const res = await this.client?.auth.signOut();
+        if(res?.error) {
+            throw res.error;
+        }
+        return true;
+    }
+
     async updateUser(attributes: { password: string; }): Promise<boolean> {
         const res = await this.client?.auth.updateUser(attributes);
         if(res?.error) {
@@ -69,11 +77,11 @@ export default abstract class AbstractSupabase extends AbstractDatabase {
         return true;
     }
 
-    async signOut(): Promise<boolean> {
-        const res = await this.client?.auth.signOut();
-        if(res?.error) {
+    async getUser(): Promise<User | null> {
+        const res = await this.client!.auth.getUser();
+        if(res.error) {
             throw res.error;
         }
-        return true;
-    }
+        return res.data.user;
+    }    
 };
