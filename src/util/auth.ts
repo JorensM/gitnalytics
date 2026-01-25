@@ -1,42 +1,42 @@
-import { createClient } from './supabase/server';
-import { SupabaseClient } from '@supabase/supabase-js';
+// import { createClient } from './supabase/server';
+// import { SupabaseClient } from '@supabase/supabase-js';
+
+import database from "@/classes/serverDB";
 
 /**
  * Create a supabase client if arg is not already a supabase client. Otherwise
  * just return the arg
  * @param supabaseClient 
  */
-export async function createClientIfNull(supabaseClient?: SupabaseClient) {
-    return supabaseClient || await createClient();
-}
+// export async function createClientIfNull(supabaseClient?: SupabaseClient) {
+//     return supabaseClient || await createClient();
+// }
 
-export async function getSupabaseUser(supabaseClient: SupabaseClient) {
+// export async function getSupabaseUser(supabaseClient: SupabaseClient) {
 
-    //const { data: { user }, error } = await supabase.auth.getUser();
-}
+//     //const { data: { user }, error } = await supabase.auth.getUser();
+// }
 
 export async function isLoggedInToGitHub() {
-    const supabase = await createClient();
+    const user = await database.getUser();
 
-    const user = await supabase.auth.getUser();
-
-    return !!user.data.user?.user_metadata.githubAccessToken;
+    return !!user?.user_metadata.githubAccessToken;
 }
 
 export async function isLoggedInToGoogle() {
-    const supabase = await createClient();
+    const user = await database.getUser();
 
-    const user = await supabase.auth.getUser();
-
-    return !!user.data.user?.user_metadata.googleRefreshToken;
+    return !!user?.user_metadata.googleRefreshToken;
 }
 
 export async function generateAccessTokenGoogle() {
-    const supabase = await createClient();
+    const user = await database.getUser();
 
-    const user = await supabase.auth.getUser();
+    if(!user) {
+        throw new Error('Could not find current user');
+    }
 
-    const refreshToken = user.data.user?.user_metadata.googleRefreshToken;
+    const refreshToken = user.user_metadata.googleRefreshToken;
 
     const res = await fetch('https://www.googleapis.com/oauth2/v4/token', {
         method: 'POST',
@@ -54,14 +54,14 @@ export async function generateAccessTokenGoogle() {
 
     const data = await res.json();
 
-    const resSupabase = await supabase.auth.updateUser({
-        data: {
-            googleAccessToken: data.access_token
-        }
-    });
-
-    if(resSupabase.error) {
-        throw resSupabase.error
+    try {
+        await database.updateUser({
+            data: {
+                googleAccessToken: data.access_token
+            }
+        });
+    } catch (error) {
+        throw error;
     }
 
     return data.access_token;

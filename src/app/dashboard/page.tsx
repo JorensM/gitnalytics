@@ -1,14 +1,14 @@
-import GitHubSignIn from '@/components/buttons/GitHubSignIn';
-import GoogleSignIn from '@/components/buttons/GoogleSignIn';
+// import GitHubSignIn from '@/components/buttons/GitHubSignIn';
+// import GoogleSignIn from '@/components/buttons/GoogleSignIn';
 import ReportForm, { GaProperties } from '@/components/ReportForm';
 import { GitHubRepository } from '@/components/selects/GitHubRepositorySelect';
-import useDB from '@/hooks/useDB';
+// import useDB from '@/hooks/useDB';
 import { generateAccessTokenGoogle, isLoggedInToGitHub, isLoggedInToGoogle } from '@/util/auth';
-import createStripeClient from '@/util/createStripeClient';
+// import createStripeClient from '@/util/createStripeClient';
 import { getSubscriptionActive } from '@/util/stripe';
 // import { createClient } from '@/util/supabase/server';
-import moment from 'moment';
-import Link from 'next/link';
+// import moment from 'moment';
+// import Link from 'next/link';
 import database from '@/classes/serverDB';
 import { User } from '@/classes/AbstractDatabase';
 

@@ -1,15 +1,20 @@
 import { APP_URL } from '@/constants/envVars';
 import useHydrated from '@/hooks/isHydrated';
-import { createClient } from '@/util/supabase/server';
+// import { createClient } from '@/util/supabase/server';
 import { OAuth2Client } from 'google-auth-library';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import database from '@/classes/serverDB';
 
 export default async function GoogleSignIn() {
-    const supabaseClient = await createClient();
-    const user = await supabaseClient.auth.getUser();
+    // const supabaseClient = await createClient();
+    const user = await database.getUser();
 
-    const isSignedIn = !!user.data.user?.user_metadata.googleRefreshToken;
+    if(!user) {
+        throw new Error('Could not find user');
+    }
+
+    const isSignedIn = !!user.user_metadata.googleRefreshToken;
 
     const handleLogin = async () => {
         "use server"
@@ -38,13 +43,13 @@ export default async function GoogleSignIn() {
     const handleLogout = async () => {
         "use server"
         try {
-            const supabaseClient = await createClient();
+            // const supabaseClient = await createClient();
             const client = new OAuth2Client({
                 clientId: process.env.GOOGLE_CLIENT_ID!,
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
             });
 
-            const { data: { user } } = await supabaseClient.auth.getUser();
+            const user = await database.getUser();
             const access_token = user?.user_metadata.googleAccessToken;
             const refresh_token = user?.user_metadata.googleRefreshToken;
             if (!access_token && !refresh_token) {
@@ -57,7 +62,7 @@ export default async function GoogleSignIn() {
                 access_token
             });
             await client.revokeCredentials();
-            await supabaseClient.auth.updateUser({
+            await database.updateUser({
                 data: {
                     googleAccessToken: null,
                     googleRefreshToken: null

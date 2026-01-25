@@ -1,4 +1,5 @@
-import { createClient } from '@/util/supabase/server';
+// import { createClient } from '@/util/supabase/server';
+import database from '@/classes/serverDB';
 import GitClient from './GitClient';
 import { GitClientAuthResponse } from './types';
 import { redirect } from 'next/navigation';
@@ -32,8 +33,11 @@ export default class GitHubClient extends GitClient {
     }
 
     async revokeAccess(): Promise<void> {
-        const supabase = await createClient();
-        const { data: user } = await supabase.auth.getUser();
+        // const supabase = await createClient();
+        const user = await database.getUser();
+        if(!user) {
+            throw new Error('Could not find user');
+        }
         // Clear access token from user metadata
 
         const authHeader = 'Basic ' + Buffer.from(process.env.GITHUB_CLIENT_ID + ':' + process.env.GITHUB_CLIENT_SECRET).toString('base64');
@@ -47,12 +51,12 @@ export default class GitHubClient extends GitClient {
                 'Authorization': authHeader
             },
             body: JSON.stringify({
-                access_token: user.user?.user_metadata.githubAccessToken
+                access_token: user.user_metadata.githubAccessToken
             }),
         });
         
         if(res.status === 204) {
-            await supabase.auth.updateUser({
+            await database.updateUser({
                 data: {
                     githubAccessToken: null
                 }

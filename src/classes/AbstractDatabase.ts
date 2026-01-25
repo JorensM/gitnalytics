@@ -1,9 +1,9 @@
 import { User as SupabaseUser} from '@supabase/auth-js';
 
 export type UserData = {
-    githubAccessToken: string,
-    googleRefreshToken: string,
-    googleAccessToken: string
+    githubAccessToken: string | null,
+    googleRefreshToken: string | null,
+    googleAccessToken: string | null
 }
 
 export type UserAttributes = {

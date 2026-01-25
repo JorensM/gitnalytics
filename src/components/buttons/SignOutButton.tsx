@@ -1,24 +1,26 @@
 "use client"
 
-import useSupabase from '@/hooks/useSupabase';
-import { createClient } from '@/util/supabase/client'
+// import database from '@/classes/serverDB';
+import useDB from '@/hooks/useDB';
+// import useSupabase from '@/hooks/useSupabase';
+// import { createClient } from '@/util/supabase/client'
 import { revalidatePath } from 'next/cache';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 
 export default function SignOutButton() {
 
-    const supabase = useSupabase();
+    const db = useDB();
 
     const router = useRouter();
     const pathname = usePathname();
 
     const onClick = () => {  
         (async () => {
-            
-            const res = await supabase.current!.auth.signOut();
-            if(res.error) {
-                throw res.error;
+            try {
+                await db.signOut();
+            } catch(error) {
+                throw error;
             }
     
             router.refresh();

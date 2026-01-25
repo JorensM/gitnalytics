@@ -1,5 +1,5 @@
 import { generateAccessTokenGoogle } from '@/util/auth';
-import { createClient } from '@/util/supabase/server';
+// import { createClient } from '@/util/supabase/server';
 import moment from 'moment';
 import { NextRequest, NextResponse } from 'next/server';
 import database from '@/classes/serverDB';
