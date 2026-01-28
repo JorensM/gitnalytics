@@ -33,6 +33,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
+  // Setup logic
+  await database.init();
+
   // const supabase = await createClient();
 
   const user = await database.getUser();

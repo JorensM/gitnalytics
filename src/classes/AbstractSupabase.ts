@@ -80,6 +80,9 @@ export default abstract class AbstractSupabase extends AbstractDatabase {
     async getUser(): Promise<User | null> {
         const res = await this.client!.auth.getUser();
         if(res.error) {
+            if(res.error.message.includes("Auth session missing")) {
+                return null;
+            }
             throw res.error;
         }
         return res.data.user;
